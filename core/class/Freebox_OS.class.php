@@ -336,7 +336,7 @@ class Freebox_OS extends eqLogic {
 			$listNumber_accepted='';
 			$listNumber_outgoing='';
 			$pre_check_con = self::fetch('/api/v3/call/log/',null);
-			if($pre_check_con['success']){			
+			if(isset($pre_check_con['success'])){			
 				$timestampToday = mktime(0, 0, 0, date('n'), date('j'), date('Y'));
 				if(isset($pre_check_con['result']){
 					$nb_call = count($pre_check_con['result']);
