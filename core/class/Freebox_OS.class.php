@@ -1,20 +1,4 @@
 <?php
-/* This file is part of Jeedom.
- *
- * Jeedom is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Jeedom is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
- */
-
 /* * ***************************Includes********************************* */
 require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 
@@ -354,46 +338,50 @@ class Freebox_OS extends eqLogic {
 			$pre_check_con = self::fetch('/api/v3/call/log/',null);
 			if($pre_check_con['success']){			
 				$timestampToday = mktime(0, 0, 0, date('n'), date('j'), date('Y'));
-				$nb_call = count($pre_check_con['result']);
-				
-				$cptAppel_outgoing = 0;
-				$cptAppel_missed = 0;
-				$cptAppel_accepted = 0;
-
-				for ($k=0; $k<$nb_call; $k++) 
-				{
-					$jour = $pre_check_con['result'][$k]['datetime'];
+				if(isset($pre_check_con['result']){
+					$nb_call = count($pre_check_con['result']);
 					
-					$time = date('H:i', $pre_check_con['result'][$k]['datetime']);
-					if ($timestampToday <= $jour) 
+					$cptAppel_outgoing = 0;
+					$cptAppel_missed = 0;
+					$cptAppel_accepted = 0;
+
+					for ($k=0; $k<$nb_call; $k++) 
 					{
-						if($pre_check_con['result'][$k]['name']==$pre_check_con['result'][$k]['number'])
-						{
-							$name="N.C.";
-						}
-						else						
-						{
-							$name=$pre_check_con['result'][$k]['name'];
-						}
+						$jour = $pre_check_con['result'][$k]['datetime'];
 						
-						if ($pre_check_con['result'][$k]['type'] == 'missed')
+						$time = date('H:i', $pre_check_con['result'][$k]['datetime']);
+						if ($timestampToday <= $jour) 
 						{
-							$cptAppel_missed++;
-							$listNumber_missed.= $pre_check_con['result'][$k]['number'].": ".$name." à ".$time." - de ".$pre_check_con['result'][$k]['duration']."s<br>";
-						}
-						if ($pre_check_con['result'][$k]['type'] == 'accepted')
-						{
-							$cptAppel_accepted++;
-							$listNumber_accepted.= $pre_check_con['result'][$k]['number'].": ".$name." à ".$time." - de ".$pre_check_con['result'][$k]['duration']."s<br>";
-						}
-						if ($pre_check_con['result'][$k]['type'] == 'outgoing')
-						{
-							$cptAppel_outgoing++;
-							$listNumber_outgoing.= $pre_check_con['result'][$k]['number'].": ".$name." à ".$time." - de ".$pre_check_con['result'][$k]['duration']."s<br>";
+							if($pre_check_con['result'][$k]['name']==$pre_check_con['result'][$k]['number'])
+							{
+								$name="N.C.";
+							}
+							else						
+							{
+								$name=$pre_check_con['result'][$k]['name'];
+							}
+							
+							if ($pre_check_con['result'][$k]['type'] == 'missed')
+							{
+								$cptAppel_missed++;
+								$listNumber_missed.= $pre_check_con['result'][$k]['number'].": ".$name." à ".$time." - de ".$pre_check_con['result'][$k]['duration']."s<br>";
+							}
+							if ($pre_check_con['result'][$k]['type'] == 'accepted')
+							{
+								$cptAppel_accepted++;
+								$listNumber_accepted.= $pre_check_con['result'][$k]['number'].": ".$name." à ".$time." - de ".$pre_check_con['result'][$k]['duration']."s<br>";
+							}
+							if ($pre_check_con['result'][$k]['type'] == 'outgoing')
+							{
+								$cptAppel_outgoing++;
+								$listNumber_outgoing.= $pre_check_con['result'][$k]['number'].": ".$name." à ".$time." - de ".$pre_check_con['result'][$k]['duration']."s<br>";
+							}
 						}
 					}
+					$retourFbx = array('missed' => $cptAppel_missed, 'list_missed' => $listNumber_missed, 'accepted' => $cptAppel_accepted, 'list_accepted' => $listNumber_accepted, 'outgoing' => $cptAppel_outgoing,'list_outgoing' => $listNumber_outgoing );
 				}
-				$retourFbx = array('missed' => $cptAppel_missed, 'list_missed' => $listNumber_missed, 'accepted' => $cptAppel_accepted, 'list_accepted' => $listNumber_accepted, 'outgoing' => $cptAppel_outgoing,'list_outgoing' => $listNumber_outgoing );
+				else	
+					$retourFbx = array('missed' => 0, 'list_missed' => "", 'accepted' => 0, 'list_accepted' => "", 'outgoing' => 0,'list_outgoing' => "" );
 				self::close_session();
 				return $retourFbx;
 			}
