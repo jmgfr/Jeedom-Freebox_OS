@@ -1,0 +1,110 @@
+<span class="cmd" data-type="action" data-subtype="other" data-cmd_id="#id#" style="width:100%;height:100%;">
+    <a class="btn btn-sm btn-default action cmdName tooltips iconCmd#id#" title="" style="background-color:#576e84 !important;border-color : transparent !important;"></a>
+   <script>
+		if ("#state#" == "1") {
+			$(".iconCmd#id#").css('background-color', '#C42833');
+		} else {
+			$(".iconCmd#id#").parent().parent().css('background-color', 'transparent');
+		}
+	$(".cmd[data-cmd_id=#id#] .action").off();
+	$(".cmd[data-cmd_id=#id#] .action").on("click", function() {
+		jeedom.cmd.execute({id: "#id#"});
+	});
+	switch('#logicalId#'){
+		case 'home':
+			$('.iconCmd#id#').text('Free');
+		break;
+		case 'power':
+			$('.iconCmd#id#').append('<img src="plugins/Freebox_OS/images/power.png" width="20px"/>');
+		break;
+		case 'red':
+			$('.iconCmd#id#').append('<img src="plugins/Freebox_OS/images/red.png" width="20px"/>');
+			$('.iconCmd#id#').css('background-color', '#C42833');
+		break;
+		case 'up':
+			$('.iconCmd#id#').append('<img src="plugins/Freebox_OS/images/up.png" width="20px"/>');
+		break;
+		case 'blue':
+			$('.iconCmd#id#').append('<img src="plugins/Freebox_OS/images/blue.png" width="20px"/>');
+			$('.iconCmd#id#').css('background-color', '#2C5FBE');
+		break;
+		case '1':
+			$('.iconCmd#id#').text('1');
+		break;
+		case '2':
+			$('.iconCmd#id#').text('2');
+		break;
+		case '3':
+			$('.iconCmd#id#').text('3');
+		break;
+		case '4':
+			$('.iconCmd#id#').text('4');
+		break;
+		case '5':
+			$('.iconCmd#id#').text('5');
+		break;
+		case '6':
+			$('.iconCmd#id#').text('6');
+		break;
+		case '7':
+			$('.iconCmd#id#').text('7');
+		break;
+		case '8':
+			$('.iconCmd#id#').text('8');
+		break;
+		case '9':
+			$('.iconCmd#id#').text('9');
+		break;
+		case '0':
+			$('.iconCmd#id#').text('0');
+		break;
+		case 'vol_inc':
+			$('.iconCmd#id#').text('+');
+		break;
+		case 'vol_dec':
+			$('.iconCmd#id#').text('-');
+		break;
+		case 'prgm_inc':
+			$('.iconCmd#id#').text('+');
+		break;
+		case 'prgm_dec':
+			$('.iconCmd#id#').text('-');
+		break;
+		case 'mute':
+			$('.iconCmd#id#').append('<img src="plugins/Freebox_OS/images/mute.png" width="20px"/>');
+		break;
+		case 'left':
+			$('.iconCmd#id#').append('<img src="plugins/Freebox_OS/images/left.png" width="20px"/>');
+		break;
+		case 'right':
+			$('.iconCmd#id#').append('<img src="plugins/Freebox_OS/images/right.png" width="20px"/>');
+		break;
+		case 'ok':
+			$('.iconCmd#id#').text('OK');
+		break;
+		case 'green':
+			$('.iconCmd#id#').append('<img src="plugins/Freebox_OS/images/green.png" width="20px"/>');
+			$('.iconCmd#id#').css('background-color', '#1F8D15');
+		break;
+		case 'down':
+			$('.iconCmd#id#').append('<img src="plugins/Freebox_OS/images/down.png" width="20px"/>');
+		break;
+		case 'yellow':
+			$('.iconCmd#id#').append('<img src="plugins/Freebox_OS/images/yellow.png" width="20px"/>');
+			$('.iconCmd#id#').css('background-color', '#E3EC2E');
+		break;
+		case 'play':
+			$('.iconCmd#id#').append('<img src="plugins/Freebox_OS/images/play_pause.png" width="20px"/>');
+		break;
+		case 'prev':
+			$('.iconCmd#id#').append('<img src="plugins/Freebox_OS/images/previous.png" width="20px"/>');
+		break;
+		case 'next':
+			$('.iconCmd#id#').append('<img src="plugins/Freebox_OS/images/next.png" width="20px"/>');
+		break;
+		case 'rec':
+			$('.iconCmd#id#').append('<img src="plugins/Freebox_OS/images/rec.png" width="20px"/>');
+		break;
+	}
+	</script>
+</span>

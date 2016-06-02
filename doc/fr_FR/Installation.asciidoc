@@ -1,0 +1,21 @@
+Un fois, le plugin installé et activé, nous devons procéder a un appairage du serveur jeedom sur la freebox.
+
+image::../images/Freebox_OS_screenshot_configuration.jpg[]
+
+Sur la page de configuration vous avez la possibilité de personnaliser les option de connexion, mais ceule ceux par defaut ont ete validé
+
+==== Appairage
+Pour cela il suffi de cliquer sur le bouton "Appairer" dans votre interface de configuration
+Vous allez a ce moment avoir un message comme ceci.
+Ne valider surtout pas maintenant, attendez les etapes suivantes
+
+image::../images/MessageValidation.jpg[]
+==== Validation sur la freebox
+
+Vous avez donc demandé a votre freebox une nouvelle connexion par l'api, et il faut l'autoriser.
+Pour cela rien de plus simple, il vous faut donc aller valider cette connexion directement sur votre freebox en appuillant sur la fleche de droite pour repondre "oui"
+
+image::../images/EcranFreebox.jpg[]
+==== Validation Jeedom
+Vous pouvez donc maintenant retourner sur votre pc pour validé le message laissé en attente précédement.
+L'etat de fonctionnement de la liaison vas alors etre tester.
