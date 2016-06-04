@@ -10,5 +10,6 @@
     <require>1.80</require>
     <version>1.0</version>
     <category>communication</category>
+	<hasDependency>1</hasDependency>
 </info>
 

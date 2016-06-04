@@ -105,7 +105,7 @@ class Freebox_OS extends eqLogic {
 		else
 			return false;
 	}
-        public function Downloads($Etat){
+    public function Downloads($Etat){
                 if(self::open_session()){
 			$List_DL=self::fetch('/api/v3/downloads/',null);
 			self::close_session();
@@ -642,6 +642,26 @@ class Freebox_OS extends eqLogic {
 			}
 		}
 	}
+	public static function dependancy_info() {
+		$return = array();
+		$return['log'] = 'Freebox_OS_update';
+		$return['progress_file'] = '/tmp/compilation_Freebox_OS_in_progress';
+		if (exec('dpkg -s nc | grep -c "Status: install"') ==1)
+				$return['state'] = 'ok';
+		else
+			$return['state'] = 'nok';
+		return $return;
+	}
+	public static function dependancy_install() {
+		if (file_exists('/tmp/compilation_Freebox_OS_in_progress')) {
+			return;
+		}
+		log::remove('Freebox_OS_update');
+		$cmd = 'sudo /bin/bash ' . dirname(__FILE__) . '/../../ressources/install.sh';
+		$cmd .= ' >> ' . log::getPathToLog('Freebox_OS_update') . ' 2>&1 &';
+		exec($cmd);
+	}
+
 }
 class Freebox_OSCmd extends cmd {
 	public function execute($_options = array())	{
