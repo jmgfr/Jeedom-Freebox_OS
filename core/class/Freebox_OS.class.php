@@ -646,7 +646,7 @@ class Freebox_OS extends eqLogic {
 		$return = array();
 		$return['log'] = 'Freebox_OS_update';
 		$return['progress_file'] = '/tmp/compilation_Freebox_OS_in_progress';
-		if (exec('dpkg -s nc | grep -c "Status: install"') ==1)
+		if (exec('dpkg -s netcat | grep -c "Status: install"') ==1)
 				$return['state'] = 'ok';
 		else
 			$return['state'] = 'nok';
