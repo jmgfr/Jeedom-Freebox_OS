@@ -551,6 +551,7 @@ class Freebox_OS extends eqLogic {
 			'#background#' => $this->getBackgroundColor($_version),		
 			'#height#' => $this->getDisplay('height', 'auto'),
 			'#width#' => $this->getDisplay('width', '250'),
+			'#cmd#' => ""
 		);
 		if($this->getLogicalId()=='Reseau'||$this->getLogicalId()=='System')
 		{
