@@ -236,6 +236,30 @@ class Freebox_OS extends eqLogic {
 		else
 			return false;
 	}
+	public function ringtone_on() {
+		if(self::open_session()){
+			$content=self::fetch('/api/v3/phone/dect_page_start/',"","POST");	
+			self::close_session();
+			if($content['success'])
+				return $content;
+			else
+				return false;
+		}
+		else
+			return false;
+	}
+	public function ringtone_off() {
+		if(self::open_session()){
+			$content=self::fetch('/api/v3/phone/dect_page_stop/',"","POST");	
+			self::close_session();
+			if($content['success'])
+				return $content;
+			else
+				return false;
+		}
+		else
+			return false;
+	}
 	public function system() {		
 		if(self::open_session()){
 			$systemArray = self::fetch('/api/v3/system/',null);
@@ -514,6 +538,8 @@ class Freebox_OS extends eqLogic {
 		self::AddCommande($Phone,'Liste Appels Manqués','listAppelsManquee',"info",'string','Freebox_OS_Phone');
 		self::AddCommande($Phone,'Liste Appels Reçus','listAppelsRecus',"info",'string','Freebox_OS_Phone');
 		self::AddCommande($Phone,'Liste Appels Passés','listAppelsPasse',"info",'string','Freebox_OS_Phone');
+		self::AddCommande($Phone,'Faire sonner les téléphones DECT','sonnerieDectOn',"action",'other','Freebox_OS_Phone');
+		self::AddCommande($Phone,'Arrêter les sonneries des téléphones DECT','sonnerieDectOff',"action",'other','Freebox_OS_Phone');
                 $Downloads=self::AddEqLogic('Téléchargements','Downloads');
                 self::AddCommande($Downloads,'Nombre de tâche(s)','nb_tasks',"info",'string','Freebox_OS_Downloads');  
                 self::AddCommande($Downloads,'Nombre de tâche(s) active','nb_tasks_active',"info",'string','Freebox_OS_Downloads');
@@ -838,6 +864,12 @@ class Freebox_OSCmd extends cmd {
 							break;
 						case "listAppelsPasse":
 							$return= $result['list_outgoing'];
+							break;
+						case "sonnerieDectOn":
+							$this->getEqLogic()->ringtone_on();
+							break;
+						case "sonnerieDectOff":
+							$this->getEqLogic()->ringtone_off();
 							break;
 					}
 				}
