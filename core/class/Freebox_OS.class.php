@@ -179,7 +179,7 @@ class Freebox_OS extends eqLogic {
 					}
 					else {	
 						$Disque=self::AddEqLogic('Disque Dur','Disque');
-						$commande=self::AddCommande($Disque,'Occupation ['.$reponse['result'][$countDD]['type'].'] '.$reponse['result'][$countDD]['model'],$reponse['result'][$countDD]['id'],"info",'numeric','Freebox_OS_Disque','%');
+						$commande=self::AddCommande($Disque,'Occupation ['.$reponse['result'][$countDD]['type'].'] - '.$reponse['result'][$countDD]['id'],$reponse['result'][$countDD]['id'],"info",'numeric','Freebox_OS_Disque','%');
 						$commande->event($value);
 					}
 					$countDD++;
