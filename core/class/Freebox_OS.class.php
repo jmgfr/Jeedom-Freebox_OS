@@ -68,7 +68,7 @@ class Freebox_OS extends eqLogic {
             $method=(!$params)?'GET':'POST';
 		$serveur=trim(config::byKey('FREEBOX_SERVER_IP','Freebox_OS'));
 		$session_token=config::byKey('FREEBOX_SERVER_SESSION_TOKEN','Freebox_OS');
-		log::add('FreeboxOS','debug','Conexion ' . $method .' sur la l\'adresse '. $serveur.$api_url .'('.json_encode($params).')');
+		log::add('FreeboxOS','debug','Connexion ' . $method .' sur la l\'adresse '. $serveur.$api_url .'('.json_encode($params).')');
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $serveur.$api_url);
         curl_setopt($ch, CURLOPT_HEADER, false);
