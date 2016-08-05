@@ -16,7 +16,8 @@
 		  var $Receivers=jQuery.parseJSON(data.result);
 		  $('.CmdSelectorAirMedia#id#').html('');
 		  jQuery.each(Receivers,function(key, value) {
-		    $('.CmdSelectorAirMedia#id#').append($('<option value="'+value['name']+'">').text(value['name']));
+		  	alert(value);
+		    $('.CmdSelectorAirMedia#id#').append($('<option value="'+value.name+'">').text(value.name));
 		  });
 			}
 		});
