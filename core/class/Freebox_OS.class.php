@@ -437,7 +437,7 @@ class Freebox_OS extends eqLogic {
 	}
 	public static function airmediaReceivers() {
 		if(self::open_session()){
-	        	$return=self::fetch('/api/v3/airmedia/receivers/','',"GET");   
+	        	$return=self::fetch('/api/v3/airmedia/receivers/',null);   
 	         	self::close_session();
 			if($return['success'])
 	                	return $return['result'];
