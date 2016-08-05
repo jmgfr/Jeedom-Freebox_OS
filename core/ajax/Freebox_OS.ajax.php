@@ -53,7 +53,7 @@ try {
 	ajax::success(false);
 	}
 	if (init('action') == 'getAirMediaRecivers')	{
-		ajax::success(Freebox_Os::airmediaReceivers());
+		ajax::success(Freebox_OS::airmediaReceivers());
 	}
 	if (init('action') == 'setAirMediaReciver')	{
 		$cmd=cmd::byId(init('id'));
