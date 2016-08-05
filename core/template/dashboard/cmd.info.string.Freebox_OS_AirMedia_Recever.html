@@ -13,7 +13,9 @@
 		global: false,
 		error: function(request, status, error) {},
 		success: function(data) {
+		  alert(data);
 		  var Receivers=jQuery.parseJSON(data.result);
+		  alert(Receivers.lenght);
 		  $('.CmdSelectorAirMedia#id#').html('');
 		  jQuery.each(Receivers,function(key, value) {
 		  	alert(value);
