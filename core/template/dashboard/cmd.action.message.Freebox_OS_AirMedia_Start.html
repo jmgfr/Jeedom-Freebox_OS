@@ -28,7 +28,7 @@
     		}
     	});
        // $('.CmdSelectorMode#id# option[value="#state#"]').prop('selected', true);
-        $('.cmd[data-cmd_id=#id#] .start').on('click', function() {
+        $('.cmd[data-cmd_id=#id#] .execute').on('click', function() {
           jeedom.cmd.execute({id: '#id#', value: {titre:$('.CmdSelectorType#id#').val(), message:$('.CmdMedia#id#').val()}});
         });
     </script>
