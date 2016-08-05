@@ -20,12 +20,12 @@
     		success: function(data) {
     			$('.CmdSelectorType#id#').html('');
     		  	jQuery.each(data.result,function(Receiver) {
-    		  	    if(Receiver.name==$('.CmdSelectorAirMedia#id#').val()){
+    		  	    //if(Receiver.name==$('.CmdSelectorAirMedia#id#').val()){
             		  	jQuery.each(Receiver.capabilities,function(key, value) {
                             if(value)
                                 $('.CmdSelectorType#id#').append($('<option value="'+key+'">').text(key));
                     	});
-    		  	    }
+    		  	    //}
     		  	});
     		}
     	});
