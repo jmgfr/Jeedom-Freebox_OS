@@ -425,7 +425,7 @@ class Freebox_OS extends eqLogic {
 		if(self::open_session()){
 			$parametre["enabled"]=$this->getIsEnable();
 			$parametre["password"]=$this->getConfiguration('password');
-	        	$return=self::fetch('/api/v3/airmedia',$parametre,"PUT");   
+	        	$return=self::fetch('/api/v3/airmedia/config/',$parametre,"PUT");   
 	         	self::close_session();
 			if($return['success'])
 	                	return $return['result'];
