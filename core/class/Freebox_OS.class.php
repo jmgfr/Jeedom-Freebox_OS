@@ -69,7 +69,7 @@ class Freebox_OS extends eqLogic {
 		$session_token=config::byKey('FREEBOX_SERVER_SESSION_TOKEN','Freebox_OS');
 		log::add('FreeboxOS','debug','Connexion ' . $method .' sur la l\'adresse '. $serveur.$api_url .'('.json_encode($params).')');
 	        $ch = curl_init();
-	        curl_setopt($ch, CURLOPT_URL, $serveur.$api_url);
+	        curl_setopt($ch, CURLOPT_URL, urlencode($serveur.$api_url));
 	        curl_setopt($ch, CURLOPT_HEADER, false);
 	        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	        curl_setopt($ch, CURLOPT_COOKIESESSION, true);
@@ -455,7 +455,8 @@ class Freebox_OS extends eqLogic {
 	        	if($media!=null)
 	        		$parametre["media"]=$media;
 	        	$parametre["password"]="";//$this->getConfiguration('password');
-	        	$return=self::fetch('/api/v3/airmedia/receivers/'.$receiver.'/',$parametre,"POST");
+	        	log::add('FreeboxOS','debug',json_encode($parametre));
+	        	$return=self::fetch('/api/v3/airmedia/receivers/'.$receiver.'/',$parametre,'POST');
 	         	self::close_session();
 			if($return['success'])
 	                	return true;
@@ -934,7 +935,7 @@ class Freebox_OSCmd extends cmd {
 				$receiver=$this->getEqLogic()->getCmd(null,"ActualAirmedia");
 				switch($this->getLogicalId()){
 					case "airmediastart":
-						//$return = $this->getEqLogic()->AirMediaAction($receiver,"start",$_options['titre'],$_options['message']);
+						$return = $this->getEqLogic()->AirMediaAction($receiver,"start",$_options['titre'],$_options['message']);
 					break;
 					case "airmediastop":
 						$return = $this->getEqLogic()->AirMediaAction($receiver,"stop",$_options['titre'],$_options['message']);
