@@ -421,6 +421,20 @@ class Freebox_OS extends eqLogic {
 		$result=$http->exec(2,2);
 		return $result;
 	}
+	public function airmediaConfig() {
+		if(self::open_session()){
+			$parametre["enabled"]=$this->getIsEnable();
+			$parametre["password"]=$this->getConfiguration('password');
+	        	$return=self::fetch('/api/v3/airmedia',$parametre,"PUT");   
+	         	self::close_session();
+			if($return['success'])
+	                	return $return['result'];
+	                else
+	                        return false;
+		}
+		else
+		       return false;
+	}
 	public static function airmediaReceivers() {
 		if(self::open_session()){
 	        	$return=self::fetch('/api/v3/airmedia/receivers/','',"GET");   
@@ -440,7 +454,7 @@ class Freebox_OS extends eqLogic {
 	        	$parametre["media_type"]=$media_type;
 	        	if($media!=null)
 	        		$parametre["media"]=$media;
-	        	$parametre["password"]=$media_type;
+	        	$parametre["password"]=$this->getConfiguration('password');
 	        	$return=self::fetch('/api/v3/airmedia/receivers/'.$receiver.'/',$parametre,"POST");   
 	         	self::close_session();
 			if($return['success'])
@@ -618,40 +632,45 @@ class Freebox_OS extends eqLogic {
 		return template_replace($replace, getTemplate('core', $_version, $this->getLogicalId(),'Freebox_OS'));
 	}
 	public function preSave() {	
-		if($this->getLogicalId()=='FreeboxTv')	{
-			$ActionPower=self::AddCommande($this,'Power','power',"action",'other','Freebox_Tv');
-			$InfoPower=self::AddCommande($this,' Statut Power','powerstat',"info",'binary','Freebox_Tv');
-			$ActionPower->setValue($InfoPower->getId());
-			$ActionPower->save();
-			self::AddCommande($this,'Volume +','vol_inc',"action",'other','Freebox_Tv');
-			self::AddCommande($this,'Volume -','vol_dec',"action",'other','Freebox_Tv');
-			self::AddCommande($this,'Programme +','prgm_inc',"action",'other','Freebox_Tv');
-			self::AddCommande($this,'Programme -','prgm_dec',"action",'other','Freebox_Tv');
-			self::AddCommande($this,'Home','home',"action",'other','Freebox_Tv');
-			self::AddCommande($this,'Mute','mute',"action",'other','Freebox_Tv');
-			self::AddCommande($this,'Enregister','rec',"action",'other','Freebox_Tv');
-			self::AddCommande($this,'1','1',"action",'other','Freebox_Tv');
-			self::AddCommande($this,'2','2',"action",'other','Freebox_Tv');
-			self::AddCommande($this,'3','3',"action",'other','Freebox_Tv');
-			self::AddCommande($this,'4','4',"action",'other','Freebox_Tv');
-			self::AddCommande($this,'5','5',"action",'other','Freebox_Tv');
-			self::AddCommande($this,'6','6',"action",'other','Freebox_Tv');
-			self::AddCommande($this,'7','7',"action",'other','Freebox_Tv');
-			self::AddCommande($this,'8','8',"action",'other','Freebox_Tv');
-			self::AddCommande($this,'9','9',"action",'other','Freebox_Tv');
-			self::AddCommande($this,'0','0',"action",'other','Freebox_Tv');
-			self::AddCommande($this,'Precedent','prev',"action",'other','Freebox_Tv');
-			self::AddCommande($this,'Lecture','play',"action",'other','Freebox_Tv');
-			self::AddCommande($this,'Suivant','next',"action",'other','Freebox_Tv');
-			self::AddCommande($this,'Rouge','red',"action",'other','Freebox_Tv');
-			self::AddCommande($this,'Vert','green',"action",'other','Freebox_Tv');
-			self::AddCommande($this,'Bleu','blue',"action",'other','Freebox_Tv');
-			self::AddCommande($this,'Jaune','yellow',"action",'other','Freebox_Tv');
-			self::AddCommande($this,'Ok','ok',"action",'other','Freebox_Tv');
-			self::AddCommande($this,'Haut','up',"action",'other','Freebox_Tv');
-			self::AddCommande($this,'Bas','down',"action",'other','Freebox_Tv');
-			self::AddCommande($this,'Gauche','left',"action",'other','Freebox_Tv');
-			self::AddCommande($this,'Droite','right',"action",'other','Freebox_Tv');
+		switch($this->getLogicalId())	{
+			case 'FreeboxTv':
+				$ActionPower=self::AddCommande($this,'Power','power',"action",'other','Freebox_Tv');
+				$InfoPower=self::AddCommande($this,' Statut Power','powerstat',"info",'binary','Freebox_Tv');
+				$ActionPower->setValue($InfoPower->getId());
+				$ActionPower->save();
+				self::AddCommande($this,'Volume +','vol_inc',"action",'other','Freebox_Tv');
+				self::AddCommande($this,'Volume -','vol_dec',"action",'other','Freebox_Tv');
+				self::AddCommande($this,'Programme +','prgm_inc',"action",'other','Freebox_Tv');
+				self::AddCommande($this,'Programme -','prgm_dec',"action",'other','Freebox_Tv');
+				self::AddCommande($this,'Home','home',"action",'other','Freebox_Tv');
+				self::AddCommande($this,'Mute','mute',"action",'other','Freebox_Tv');
+				self::AddCommande($this,'Enregister','rec',"action",'other','Freebox_Tv');
+				self::AddCommande($this,'1','1',"action",'other','Freebox_Tv');
+				self::AddCommande($this,'2','2',"action",'other','Freebox_Tv');
+				self::AddCommande($this,'3','3',"action",'other','Freebox_Tv');
+				self::AddCommande($this,'4','4',"action",'other','Freebox_Tv');
+				self::AddCommande($this,'5','5',"action",'other','Freebox_Tv');
+				self::AddCommande($this,'6','6',"action",'other','Freebox_Tv');
+				self::AddCommande($this,'7','7',"action",'other','Freebox_Tv');
+				self::AddCommande($this,'8','8',"action",'other','Freebox_Tv');
+				self::AddCommande($this,'9','9',"action",'other','Freebox_Tv');
+				self::AddCommande($this,'0','0',"action",'other','Freebox_Tv');
+				self::AddCommande($this,'Precedent','prev',"action",'other','Freebox_Tv');
+				self::AddCommande($this,'Lecture','play',"action",'other','Freebox_Tv');
+				self::AddCommande($this,'Suivant','next',"action",'other','Freebox_Tv');
+				self::AddCommande($this,'Rouge','red',"action",'other','Freebox_Tv');
+				self::AddCommande($this,'Vert','green',"action",'other','Freebox_Tv');
+				self::AddCommande($this,'Bleu','blue',"action",'other','Freebox_Tv');
+				self::AddCommande($this,'Jaune','yellow',"action",'other','Freebox_Tv');
+				self::AddCommande($this,'Ok','ok',"action",'other','Freebox_Tv');
+				self::AddCommande($this,'Haut','up',"action",'other','Freebox_Tv');
+				self::AddCommande($this,'Bas','down',"action",'other','Freebox_Tv');
+				self::AddCommande($this,'Gauche','left',"action",'other','Freebox_Tv');
+				self::AddCommande($this,'Droite','right',"action",'other','Freebox_Tv');
+			break;
+			case 'AirPlay':
+				$this->airmediaConfig();
+			break;
 		}
 		if($this->getLogicalId()=='')
 			$this->setLogicalId('FreeboxTv');
