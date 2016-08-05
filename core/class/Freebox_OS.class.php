@@ -2,22 +2,22 @@
 /* * ***************************Includes********************************* */
 require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 class Freebox_OS extends eqLogic {
-    public function track_id() 	{
+	public function track_id() 	{
 		$serveur		=trim(config::byKey('FREEBOX_SERVER_IP','Freebox_OS'));
 		$app_id 		=trim(config::byKey('FREEBOX_SERVER_APP_ID','Freebox_OS'));
 		$app_name 		=trim(config::byKey('FREEBOX_SERVER_APP_NAME','Freebox_OS'));
 		$app_version 	=trim(config::byKey('FREEBOX_SERVER_APP_VERSION','Freebox_OS'));
 		$device_name 	=trim(config::byKey('FREEBOX_SERVER_DEVICE_NAME','Freebox_OS'));
 		$http = new com_http($serveur . '/api/v3/login/authorize/');
-        $http->setPost(
-                json_encode(
-						array(
-							'app_id' => $app_id,
-							'app_name' => $app_name,
-							'app_version' => $app_version,
-							'device_name' => $device_name
-						)
+		$http->setPost(
+                	json_encode(
+				array(
+					'app_id' => $app_id,
+					'app_name' => $app_name,
+					'app_version' => $app_version,
+					'device_name' => $device_name
 				)
+			)
 		);
 		$result = $http->exec(30, 2);
 		if (is_json($result)) {
@@ -30,10 +30,10 @@ class Freebox_OS extends eqLogic {
 		$track_id 		=config::byKey('FREEBOX_SERVER_TRACK_ID','Freebox_OS');
 		$http = new com_http($serveur . '/api/v3/login/authorize/' . $track_id);
 		$result = $http->exec(30, 2);
-        if (is_json($result)) {
-            return json_decode($result, true);
-        }
-        return $result;
+	        if (is_json($result)) {
+	            return json_decode($result, true);
+	        }
+	        return $result;
 	}
 	public function open_session(){
 		$serveur=trim(config::byKey('FREEBOX_SERVER_IP','Freebox_OS'));
@@ -49,11 +49,11 @@ class Freebox_OS extends eqLogic {
 		
 		$http = new com_http($serveur . '/api/v3/login/session/');
 		$http->setPost( json_encode( array(
-											'app_id' => $app_id,
-											'password' => $password
-											)
-									)
-						);
+				'app_id' => $app_id,
+				'password' => $password
+				)
+			)
+		);
 		$json=$http->exec(30, 2);
 		$json_connect=json_decode($json, true);
 		if ($json_connect['success'])
@@ -63,31 +63,31 @@ class Freebox_OS extends eqLogic {
 		return true;
 	}
 	public function fetch($api_url,$params=array(), $method=null) {
-        if (!$method) 
-            $method=(!$params)?'GET':'POST';
+	        if (!$method) 
+	            	$method=(!$params)?'GET':'POST';
 		$serveur=trim(config::byKey('FREEBOX_SERVER_IP','Freebox_OS'));
 		$session_token=config::byKey('FREEBOX_SERVER_SESSION_TOKEN','Freebox_OS');
 		log::add('FreeboxOS','debug','Connexion ' . $method .' sur la l\'adresse '. $serveur.$api_url .'('.json_encode($params).')');
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $serveur.$api_url);
-        curl_setopt($ch, CURLOPT_HEADER, false);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_COOKIESESSION, true);
-        if ($method=="POST") {
-            curl_setopt($ch, CURLOPT_POST, true);
-        } elseif ($method=="DELETE") {
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
-        } elseif ($method=="PUT") {
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-        }
-        if ($params)
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array("X-Fbx-App-Auth: $session_token"));
-        $content = curl_exec($ch);
-        curl_close($ch);
-		log::add('FreeboxOS','debug', $content);
-		return json_decode($content, true);	
-    }
+	        $ch = curl_init();
+	        curl_setopt($ch, CURLOPT_URL, $serveur.$api_url);
+	        curl_setopt($ch, CURLOPT_HEADER, false);
+	        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	        curl_setopt($ch, CURLOPT_COOKIESESSION, true);
+	        if ($method=="POST") {
+	            curl_setopt($ch, CURLOPT_POST, true);
+	        } elseif ($method=="DELETE") {
+	            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+	        } elseif ($method=="PUT") {
+	            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+	        }
+	        if ($params)
+	            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params));
+	        curl_setopt($ch, CURLOPT_HTTPHEADER, array("X-Fbx-App-Auth: $session_token"));
+	        $content = curl_exec($ch);
+	        curl_close($ch);
+			log::add('FreeboxOS','debug', $content);
+			return json_decode($content, true);	
+    	}
 	public function close_session(){
 		$serveur=trim(config::byKey('FREEBOX_SERVER_IP','Freebox_OS'));
 		$http = new com_http($serveur . '/api/v3/login/logout/');
@@ -104,7 +104,7 @@ class Freebox_OS extends eqLogic {
 		else
 			return false;
 	}
-    public function Downloads($Etat){
+    	public function Downloads($Etat){
                 if(self::open_session()){
 			$List_DL=self::fetch('/api/v3/downloads/',null);
 			self::close_session();
@@ -421,18 +421,30 @@ class Freebox_OS extends eqLogic {
 		$result=$http->exec(2,2);
 		return $result;
 	}
-	public function airmediaStartVideo($media) {
-	if(self::open_session()){
-        	log::add('FreeboxOS','debug','AirMedia Start Video: '.$media);
-        	$return=self::fetch('/api/v3/airmedia/receivers/Freebox%20Player/',array("action" => "start","media_type" => "video","media" => $media,"password" => ""),"POST");   
-         	self::close_session();
-		if($return['success'])
-                	return true;
-                else
-                        return false;
+	public function airmediaReceivers() {
+		if(self::open_session()){
+	        	$return=self::fetch('/api/v3/airmedia/receivers/','',"GET");   
+	         	self::close_session();
+			if($return['success'])
+	                	return $return['result'];
+	                else
+	                        return false;
+		}
+		else
+		       return false;
 	}
-	else
-	       return false;
+	public function airmediaStartVideo($media) {
+		if(self::open_session()){
+	        	log::add('FreeboxOS','debug','AirMedia Start Video: '.$media);
+	        	$return=self::fetch('/api/v3/airmedia/receivers/Freebox%20Player/',array("action" => "start","media_type" => "video","media" => $media,"password" => ""),"POST");   
+	         	self::close_session();
+			if($return['success'])
+	                	return true;
+	                else
+	                        return false;
+		}
+		else
+		       return false;
 	}
 	public function airmediaStopVideo() {
       if(self::open_session()){
@@ -550,6 +562,9 @@ class Freebox_OS extends eqLogic {
 		self::AddCommande($Downloads,'Vitesse émission','tx_rate',"info",'string','Freebox_OS_Downloads','Mo/s');
                 self::AddCommande($Downloads,'Start DL','start_dl',"action",'other','Freebox_OS_Downloads');
                 self::AddCommande($Downloads,'Stop DL','stop_dl',"action",'other','Freebox_OS_Downloads');
+                $AirPlay=self::AddEqLogic('AirPlay','AirPlay');
+		self::AddCommande($AirPlay,'AirMedia Start Video','airmediastartvideo',"action",'message');
+		self::AddCommande($AirPlay,'AirMedia Stop Video','airmediastopvideo',"action",'message';
 		log::add('Freebox_OS','debug',config::byKey('FREEBOX_SERVER_APP_TOKEN'));
 		log::add('Freebox_OS','debug',config::byKey('FREEBOX_SERVER_TRACK_ID'));
 		if(config::byKey('FREEBOX_SERVER_TRACK_ID')!='')
@@ -645,8 +660,6 @@ class Freebox_OS extends eqLogic {
 			self::AddCommande($this,'Bas','down',"action",'other','Freebox_Tv');
 			self::AddCommande($this,'Gauche','left',"action",'other','Freebox_Tv');
 			self::AddCommande($this,'Droite','right',"action",'other','Freebox_Tv');
-			self::AddCommande($this,'AirMedia Start Video','airmediastartvideo',"action",'message','Freebox_Tv');
-			self::AddCommande($this,'AirMedia Stop Video','airmediastopvideo',"action",'message','Freebox_Tv');
 		}
 		if($this->getLogicalId()=='')
 			$this->setLogicalId('FreeboxTv');
