@@ -3,22 +3,22 @@
 require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 
 class Freebox_OS extends eqLogic {
-    public function track_id() 	{
+	public function track_id() 	{
 		$serveur		=trim(config::byKey('FREEBOX_SERVER_IP','Freebox_OS'));
 		$app_id 		=trim(config::byKey('FREEBOX_SERVER_APP_ID','Freebox_OS'));
 		$app_name 		=trim(config::byKey('FREEBOX_SERVER_APP_NAME','Freebox_OS'));
 		$app_version 	=trim(config::byKey('FREEBOX_SERVER_APP_VERSION','Freebox_OS'));
 		$device_name 	=trim(config::byKey('FREEBOX_SERVER_DEVICE_NAME','Freebox_OS'));
 		$http = new com_http($serveur . '/api/v3/login/authorize/');
-        $http->setPost(
-                json_encode(
-						array(
-							'app_id' => $app_id,
-							'app_name' => $app_name,
-							'app_version' => $app_version,
-							'device_name' => $device_name
-						)
+		$http->setPost(
+                	json_encode(
+				array(
+					'app_id' => $app_id,
+					'app_name' => $app_name,
+					'app_version' => $app_version,
+					'device_name' => $device_name
 				)
+			)
 		);
 		$result = $http->exec(30, 2);
 		if (is_json($result)) {
@@ -105,7 +105,7 @@ class Freebox_OS extends eqLogic {
 		else
 			return false;
 	}
-    public function Downloads($Etat){
+	public function Downloads($Etat){
                 if(self::open_session()){
 			$List_DL=self::fetch('/api/v3/downloads/',null);
 			self::close_session();
@@ -330,7 +330,7 @@ class Freebox_OS extends eqLogic {
 								}
 							}
 						}
-						if($Commande->execCmd() != $Equipement['active']){
+						if($Commande->execCmd() != $Equipement['active'] && $Commande->execCmd() == ''){
 							$Commande->setCollectDate('');
 							$Commande->event($Equipement['active']);
 						}
@@ -581,8 +581,8 @@ class Freebox_OS extends eqLogic {
 		);
 		if($this->getLogicalId()=='Reseau'||$this->getLogicalId()=='System')
 		{
+			$EquipementsHtml='';
 			if ($this->getIsEnable()) {
-				$EquipementsHtml='';
 				foreach ($this->getCmd(null, null, true) as $cmd) {
 					$replaceCmd['#host_type#'] = $cmd->getConfiguration('host_type');
 					$replaceCmd['#IPV4#'] = $cmd->getConfiguration('IPV4');
