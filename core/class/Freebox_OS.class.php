@@ -433,10 +433,15 @@ class Freebox_OS extends eqLogic {
 		else
 		       return false;
 	}
-	public function airmediaStartVideo($media) {
+	public function AirMediaAction($receiver,$action,$media_type,$media=null) {
 		if(self::open_session()){
 	        	log::add('FreeboxOS','debug','AirMedia Start Video: '.$media);
-	        	$return=self::fetch('/api/v3/airmedia/receivers/Freebox%20Player/',array("action" => "start","media_type" => "video","media" => $media,"password" => ""),"POST");   
+	        	$parametre["action"]=$action;
+	        	$parametre["media_type"]=$media_type;
+	        	if($media!=null)
+	        		$parametre["media"]=$media;
+	        	$parametre["password"]=""$media_type"";
+	        	$return=self::fetch('/api/v3/airmedia/receivers/'.$receiver.'/',$parametre,"POST");   
 	         	self::close_session();
 			if($return['success'])
 	                	return true;
@@ -446,19 +451,6 @@ class Freebox_OS extends eqLogic {
 		else
 		       return false;
 	}
-	public function airmediaStopVideo() {
-      if(self::open_session()){
-         log::add('FreeboxOS','debug','AirMedia Stop Video');
-         
-         $return=self::fetch('/api/v3/airmedia/receivers/Freebox%20Player/',array("action" => "stop","media_type" => "video"),"POST");   
-         self::close_session();
-         if($return['success'])
-         {
-            return true;
-         }
-         return false;
-      }
-   }
 	public function log($_type = 'INFO', $_message) {
     	log::add('FreeboxOS', $_type, '['.$this->name.'-'.$this->getId().'] '.getmypid().' '.$_message, $this->name);
     }
@@ -562,9 +554,10 @@ class Freebox_OS extends eqLogic {
 		self::AddCommande($Downloads,'Vitesse émission','tx_rate',"info",'string','Freebox_OS_Downloads','Mo/s');
                 self::AddCommande($Downloads,'Start DL','start_dl',"action",'other','Freebox_OS_Downloads');
                 self::AddCommande($Downloads,'Stop DL','stop_dl',"action",'other','Freebox_OS_Downloads');
-                $AirPlay=self::AddEqLogic('AirPlay','AirPlay');
-		self::AddCommande($AirPlay,'AirMedia Start Video','airmediastartvideo',"action",'message');
-		self::AddCommande($AirPlay,'AirMedia Stop Video','airmediastopvideo',"action",'message';
+                $AirPlay=self::AddEqLogic('AirPlay','AirPlay')
+		self::AddCommande($AirPlay,'Player actuel AirMedia','ActualAirmedia',"info",'string','Freebox_OS_AirMedia_Recever');
+		self::AddCommande($AirPlay,'AirMedia Start','airmediastart',"action",'message','Freebox_OS_AirMedia_Start');
+		self::AddCommande($AirPlay,'AirMedia Stop','airmediastop',"action",'message','Freebox_OS_AirMedia_Stop';
 		log::add('Freebox_OS','debug',config::byKey('FREEBOX_SERVER_APP_TOKEN'));
 		log::add('Freebox_OS','debug',config::byKey('FREEBOX_SERVER_TRACK_ID'));
 		if(config::byKey('FREEBOX_SERVER_TRACK_ID')!='')
@@ -913,14 +906,19 @@ class Freebox_OSCmd extends cmd {
 						$result=$this->getEqLogic()->send_cmd_fbxtv($this->getLogicalId());
 						cmd::byLogicalId('powerstat')->execute();
 					break;
-					case "airmediastartvideo":
-						$return = $this->getEqLogic()->airmediaStartVideo($_options['message']);
-					break;
-					case "airmediastopvideo":
-						$return = $this->getEqLogic()->airmediaStopVideo();
-					break;
 					default:
 						$result=$this->getEqLogic()->send_cmd_fbxtv($this->getLogicalId());
+					break;
+				}
+			break;
+			case'AirPlay':
+				$receiver=$this->getEqLogic()->getCmd(null,"ActualAirmedia");
+				switch($this->getLogicalId()){
+					case "airmediastart":
+						$return = $this->getEqLogic()->AirMediaAction($receiver,"start",$_options['titre'],$_options['message']);
+					break;
+					case "airmediastop":
+						$return = $this->getEqLogic()->AirMediaAction($receiver,"stop",$_options['titre']);
 					break;
 				}
 			break;
