@@ -557,7 +557,7 @@ class Freebox_OS extends eqLogic {
                 $AirPlay=self::AddEqLogic('AirPlay','AirPlay');
 		self::AddCommande($AirPlay,'Player actuel AirMedia','ActualAirmedia',"info",'string','Freebox_OS_AirMedia_Recever');
 		self::AddCommande($AirPlay,'AirMedia Start','airmediastart',"action",'message','Freebox_OS_AirMedia_Start');
-		self::AddCommande($AirPlay,'AirMedia Stop','airmediastop',"action",'message','Freebox_OS_AirMedia_Stop';
+		self::AddCommande($AirPlay,'AirMedia Stop','airmediastop',"action",'message','Freebox_OS_AirMedia_Stop');
 		log::add('Freebox_OS','debug',config::byKey('FREEBOX_SERVER_APP_TOKEN'));
 		log::add('Freebox_OS','debug',config::byKey('FREEBOX_SERVER_TRACK_ID'));
 		if(config::byKey('FREEBOX_SERVER_TRACK_ID')!='')
