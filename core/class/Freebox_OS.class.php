@@ -931,7 +931,7 @@ class Freebox_OSCmd extends cmd {
 				}
 			break;
 			case'AirPlay':
-				$receiver=$this->getEqLogic()->getCmd(null,"ActualAirmedia");
+				$receiver=$this->getEqLogic()->getCmd(null,"ActualAirmedia")->execCmd();
 				switch($this->getLogicalId()){
 					case "airmediastart":
 						$return = $this->getEqLogic()->AirMediaAction($receiver,"start",$_options['titre'],$_options['message']);
