@@ -1,29 +1,34 @@
 <div  style="width: 100px;" class="cmd tooltips cmd-widget" data-type="action" data-subtype="message" data-cmd_id="#id#" title="#collectDate#">
     <center>
-        <select style="color:black;width: 100px;" class="action CmdSelectorType#id#">
-          <?php
-            $Receivers=Freebox_Os::airmediaReceivers();
-            if($Receivers!= false){
-              foreach($Receivers as $Receiver){
-                foreach($Receiver['capabilities'] as $key => $value){
-                  if($key=="photo" && $value)
-                    echo '<option value="photo">photo</option>';
-                  if($key=="screen" && $value)
-                    echo '<option value="screen">screen</option>';
-                  if($key=="audio" && $value)
-                    echo '<option value="audio">audio</option>';
-                  if($key=="video" && $value)
-                    echo '<option value="video">video</option>';
-               }
-              }
-            }
-          ?>
-      </select>
+        <select style="color:black;width: 100px;" class="action CmdSelectorType#id#"></select>
       <textarea class="form-control input-sm CmdMedia#id#" rows="2" style="margin-top : 5px; resize:vertical;height: 50px;" placeholder="Url du media"  data-cmd_id="#id#"></textarea>
       <a class="btn btn-success btn-xs start cmdName">Start Media</a>
       <a class="btn btn-success btn-xs stop cmdName">Stop Media</a>
     </center>
     <script>
+        $.ajax({
+    		type: 'POST',            
+    		async: false,
+    		url: 'plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php',
+    		data:
+    			{
+    			action: 'getAirMediaRecivers'
+    			},
+    		dataType: 'json',
+    		global: false,
+    		error: function(request, status, error) {},
+    		success: function(data) {
+    			$('.CmdSelectorType#id#').html('');
+    		  	jQuery.each(data.result,function(Receiver) {
+    		  	    if(Receiver.name==$('.CmdSelectorAirMedia#id#').val()){
+            		  	jQuery.each(Receiver.capabilities,function(key, value) {
+                            if(value)
+                                $('.CmdSelectorType#id#').append($('<option value="'+key+'">').text(key));
+                    	});
+    		  	    }
+    		  	});
+    		}
+    	});
        // $('.CmdSelectorMode#id# option[value="#state#"]').prop('selected', true);
         $('.cmd[data-cmd_id=#id#] .start').on('change', function() {
           jeedom.cmd.execute({id: '#id#', value: {action:"start",titre:$('.CmdSelectorType#id#').val(), message:$('.CmdMedia#id#').val()}});
