@@ -29,10 +29,10 @@
     		}
     	});
        // $('.CmdSelectorMode#id# option[value="#state#"]').prop('selected', true);
-        $('.cmd[data-cmd_id=#id#] .start').on('change', function() {
+        $('.cmd[data-cmd_id=#id#] .start').on('click', function() {
           jeedom.cmd.execute({id: '#id#', value: {action:"start",titre:$('.CmdSelectorType#id#').val(), message:$('.CmdMedia#id#').val()}});
         });
-        $('.cmd[data-cmd_id=#id#] .stop').on('change', function() {
+        $('.cmd[data-cmd_id=#id#] .stop').on('click', function() {
           jeedom.cmd.execute({id: '#id#', value: {action:"stop",titre:$('.CmdSelectorType#id#').val(), message:$('.CmdMedia#id#').val()}});
         });
     </script>
