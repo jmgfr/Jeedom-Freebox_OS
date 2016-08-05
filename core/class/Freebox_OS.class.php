@@ -556,8 +556,7 @@ class Freebox_OS extends eqLogic {
                 self::AddCommande($Downloads,'Stop DL','stop_dl',"action",'other','Freebox_OS_Downloads');
                 $AirPlay=self::AddEqLogic('AirPlay','AirPlay');
 		self::AddCommande($AirPlay,'Player actuel AirMedia','ActualAirmedia',"info",'string','Freebox_OS_AirMedia_Recever');
-		self::AddCommande($AirPlay,'AirMedia Start','airmediastart',"action",'message','Freebox_OS_AirMedia_Start');
-		self::AddCommande($AirPlay,'AirMedia Stop','airmediastop',"action",'message','Freebox_OS_AirMedia_Stop');
+		self::AddCommande($AirPlay,'AirMedia Start/Stop','airmediastart',"action",'message','Freebox_OS_AirMedia_Start');
 		log::add('Freebox_OS','debug',config::byKey('FREEBOX_SERVER_APP_TOKEN'));
 		log::add('Freebox_OS','debug',config::byKey('FREEBOX_SERVER_TRACK_ID'));
 		if(config::byKey('FREEBOX_SERVER_TRACK_ID')!='')
@@ -915,10 +914,7 @@ class Freebox_OSCmd extends cmd {
 				$receiver=$this->getEqLogic()->getCmd(null,"ActualAirmedia");
 				switch($this->getLogicalId()){
 					case "airmediastart":
-						$return = $this->getEqLogic()->AirMediaAction($receiver,"start",$_options['titre'],$_options['message']);
-					break;
-					case "airmediastop":
-						$return = $this->getEqLogic()->AirMediaAction($receiver,"stop",$_options['titre']);
+						$return = $this->getEqLogic()->AirMediaAction($receiver,$_options['action'],$_options['titre'],$_options['message']);
 					break;
 				}
 			break;
