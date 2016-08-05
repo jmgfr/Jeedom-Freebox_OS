@@ -349,10 +349,10 @@ class Freebox_OS extends eqLogic {
 			if($Ping['success'])
 				return $Ping['result'];
 			else
-				return false;
+				return 0;
 		}
 		else
-			return false;
+			return 0;
 	}
 	public function nb_appel_absence() {
 		if(self::open_session()){
@@ -584,6 +584,7 @@ class Freebox_OS extends eqLogic {
 			$EquipementsHtml='';
 			if ($this->getIsEnable()) {
 				foreach ($this->getCmd(null, null, true) as $cmd) {
+					$replaceCmd['#stat#'] = $cmd->getIsEnable()) ?$cmd->execCmd():0;
 					$replaceCmd['#host_type#'] = $cmd->getConfiguration('host_type');
 					$replaceCmd['#IPV4#'] = $cmd->getConfiguration('IPV4');
 					$replaceCmd['#IPV6#'] = $cmd->getConfiguration('IPV6');
