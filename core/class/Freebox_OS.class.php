@@ -275,13 +275,13 @@ class Freebox_OS extends eqLogic {
 	
 	}	
 	public function UpdateSystem() {		
-		$System=self::AddEqLogic('Système','System');
+	/*	$System=self::AddEqLogic('Système','System');
 		$Commande=self::AddCommande($System,'Update','update',"action",'other','Freebox_OS_System');
 		log::add('FreeboxOS','debug','Vérification d\'une mise a jours du serveur');
 		$firmwareOnline=file_get_contents("http://dev.freebox.fr/blog/?cat=5");
 		preg_match_all('|<h1><a href=".*">Mise à jour du Freebox Server (.*)</a></h1>|U', $firmwareOnline , $parseFreeDev, PREG_PATTERN_ORDER);			
 		if(intval($Commande->execCmd()) < intval($parseFreeDev[1][0]))
-			self::reboot();
+			self::reboot();*/
 	}
 	public function adslStats(){
 		if(self::open_session()){		
