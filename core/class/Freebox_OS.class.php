@@ -584,7 +584,7 @@ class Freebox_OS extends eqLogic {
 			$EquipementsHtml='';
 			if ($this->getIsEnable()) {
 				foreach ($this->getCmd(null, null, true) as $cmd) {
-					//$replaceCmd['#stat#'] = $cmd->execCmd()!='' ?$cmd->execCmd():0;
+					$replaceCmd['#stat#'] = $cmd->execCmd()!='' ?$cmd->execCmd():0;
 					$replaceCmd['#host_type#'] = $cmd->getConfiguration('host_type');
 					$replaceCmd['#IPV4#'] = $cmd->getConfiguration('IPV4');
 					$replaceCmd['#IPV6#'] = $cmd->getConfiguration('IPV6');
