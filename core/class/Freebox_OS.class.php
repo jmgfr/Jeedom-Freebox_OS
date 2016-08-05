@@ -448,7 +448,7 @@ class Freebox_OS extends eqLogic {
 		       return false;
 	}
 	public function AirMediaAction($receiver,$action,$media_type,$media=null) {
-		if(self::open_session()){
+		if(self::open_session()&&$receiver!=""&&$media_type!=null){
 	        	log::add('FreeboxOS','debug','AirMedia Start Video: '.$media);
 	        	$parametre["action"]=$action;
 	        	$parametre["media_type"]=$media_type;
