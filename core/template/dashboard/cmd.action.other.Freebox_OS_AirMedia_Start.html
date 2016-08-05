@@ -1,0 +1,32 @@
+<div  style="width: 100px;" class="cmd tooltips cmd-widget" data-type="action" data-subtype="message" data-cmd_id="#id#" title="#collectDate#">
+    <center>
+        <select style="color:black;width: 100px;" class="action CmdSelectorType#id#">
+          <?php
+            $Receivers=Freebox_Os::airmediaReceivers();
+            if($Receivers!= false){
+              foreach($Receivers as $Receiver){
+                foreach($Receiver['capabilities'] as $key => $value){
+                  if($key=="photo" && $value)
+                    echo '<option value="photo">photo</option>';
+                  if($key=="screen" && $value)
+                    echo '<option value="screen">screen</option>';
+                  if($key=="audio" && $value)
+                    echo '<option value="audio">audio</option>';
+                  if($key=="video" && $value)
+                    echo '<option value="video">video</option>';
+               }
+              }
+            }
+          ?>
+      </select>
+      <input class="action CmdMedia#id#" />
+      <textarea class="form-control input-sm message" rows="2" style="margin-top : 5px; resize:vertical;height: 50px;" placeholder="Url du media"  data-cmd_id="#id#"></textarea>
+      <a class="btn btn-success btn-xs execute cmdName">Start Media</a>
+    </center>
+    <script>
+       // $('.CmdSelectorMode#id# option[value="#state#"]').prop('selected', true);
+        $('.cmd[data-cmd_id=#id#] .execute').on('change', function() {
+          jeedom.cmd.execute({id: '#id#', value: {titre:$('.CmdSelectorType#id#').val(), message:$('.CmdMedia#id#').val()}});
+        });
+    </script>
+</div>
