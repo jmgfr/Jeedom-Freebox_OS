@@ -554,7 +554,7 @@ class Freebox_OS extends eqLogic {
 		self::AddCommande($Downloads,'Vitesse émission','tx_rate',"info",'string','Freebox_OS_Downloads','Mo/s');
                 self::AddCommande($Downloads,'Start DL','start_dl',"action",'other','Freebox_OS_Downloads');
                 self::AddCommande($Downloads,'Stop DL','stop_dl',"action",'other','Freebox_OS_Downloads');
-                $AirPlay=self::AddEqLogic('AirPlay','AirPlay')
+                $AirPlay=self::AddEqLogic('AirPlay','AirPlay');
 		self::AddCommande($AirPlay,'Player actuel AirMedia','ActualAirmedia',"info",'string','Freebox_OS_AirMedia_Recever');
 		self::AddCommande($AirPlay,'AirMedia Start','airmediastart',"action",'message','Freebox_OS_AirMedia_Start');
 		self::AddCommande($AirPlay,'AirMedia Stop','airmediastop',"action",'message','Freebox_OS_AirMedia_Stop';
