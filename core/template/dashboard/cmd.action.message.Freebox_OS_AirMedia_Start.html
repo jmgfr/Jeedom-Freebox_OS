@@ -2,8 +2,7 @@
     <center>
         <select style="color:black;width: 100px;" class="action CmdSelectorType#id#"></select>
       <textarea class="form-control input-sm CmdMedia#id#" rows="2" style="margin-top : 5px; resize:vertical;height: 50px;" placeholder="Url du media"  data-cmd_id="#id#"></textarea>
-      <a class="btn btn-success btn-xs start cmdName">Start Media</a>
-      <a class="btn btn-success btn-xs stop cmdName">Stop Media</a>
+      <a class="btn btn-success btn-xs execute cmdName">#name#</a>
     </center>
     <script>
         $.ajax({
@@ -30,10 +29,7 @@
     	});
        // $('.CmdSelectorMode#id# option[value="#state#"]').prop('selected', true);
         $('.cmd[data-cmd_id=#id#] .start').on('click', function() {
-          jeedom.cmd.execute({id: '#id#', value: {action:"start",titre:$('.CmdSelectorType#id#').val(), message:$('.CmdMedia#id#').val()}});
-        });
-        $('.cmd[data-cmd_id=#id#] .stop').on('click', function() {
-          jeedom.cmd.execute({id: '#id#', value: {action:"stop",titre:$('.CmdSelectorType#id#').val(), message:$('.CmdMedia#id#').val()}});
+          jeedom.cmd.execute({id: '#id#', value: {titre:$('.CmdSelectorType#id#').val(), message:$('.CmdMedia#id#').val()}});
         });
     </script>
 </div>
