@@ -21,6 +21,7 @@
     			$('.CmdSelectorType#id#').html('');
     		  	jQuery.each(data.result,function(Receiver) {
     		  	    //if(Receiver.name==$('.CmdSelectorAirMedia#id#').val()){
+    		  	     $('.CmdSelectorType#id#').append($('<optgroup label="'+Receiver.name+'">'));
             		  	jQuery.each(Receiver.capabilities,function(key, value) {
                             if(value)
                                 $('.CmdSelectorType#id#').append($('<option value="'+key+'">').text(key));
