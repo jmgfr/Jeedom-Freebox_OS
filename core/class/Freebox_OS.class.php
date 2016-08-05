@@ -1,24 +1,23 @@
 <?php
 /* * ***************************Includes********************************* */
 require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
-
 class Freebox_OS extends eqLogic {
-	public function track_id() 	{
+    public function track_id() 	{
 		$serveur		=trim(config::byKey('FREEBOX_SERVER_IP','Freebox_OS'));
 		$app_id 		=trim(config::byKey('FREEBOX_SERVER_APP_ID','Freebox_OS'));
 		$app_name 		=trim(config::byKey('FREEBOX_SERVER_APP_NAME','Freebox_OS'));
 		$app_version 	=trim(config::byKey('FREEBOX_SERVER_APP_VERSION','Freebox_OS'));
 		$device_name 	=trim(config::byKey('FREEBOX_SERVER_DEVICE_NAME','Freebox_OS'));
 		$http = new com_http($serveur . '/api/v3/login/authorize/');
-		$http->setPost(
-                	json_encode(
-				array(
-					'app_id' => $app_id,
-					'app_name' => $app_name,
-					'app_version' => $app_version,
-					'device_name' => $device_name
+        $http->setPost(
+                json_encode(
+						array(
+							'app_id' => $app_id,
+							'app_name' => $app_name,
+							'app_version' => $app_version,
+							'device_name' => $device_name
+						)
 				)
-			)
 		);
 		$result = $http->exec(30, 2);
 		if (is_json($result)) {
@@ -105,7 +104,7 @@ class Freebox_OS extends eqLogic {
 		else
 			return false;
 	}
-	public function Downloads($Etat){
+    public function Downloads($Etat){
                 if(self::open_session()){
 			$List_DL=self::fetch('/api/v3/downloads/',null);
 			self::close_session();
@@ -275,13 +274,13 @@ class Freebox_OS extends eqLogic {
 	
 	}	
 	public function UpdateSystem() {		
-	/*	$System=self::AddEqLogic('Système','System');
+		$System=self::AddEqLogic('Système','System');
 		$Commande=self::AddCommande($System,'Update','update',"action",'other','Freebox_OS_System');
 		log::add('FreeboxOS','debug','Vérification d\'une mise a jours du serveur');
 		$firmwareOnline=file_get_contents("http://dev.freebox.fr/blog/?cat=5");
 		preg_match_all('|<h1><a href=".*">Mise à jour du Freebox Server (.*)</a></h1>|U', $firmwareOnline , $parseFreeDev, PREG_PATTERN_ORDER);			
 		if(intval($Commande->execCmd()) < intval($parseFreeDev[1][0]))
-			self::reboot();*/
+			self::reboot();
 	}
 	public function adslStats(){
 		if(self::open_session()){		
@@ -330,7 +329,7 @@ class Freebox_OS extends eqLogic {
 								}
 							}
 						}
-						if($Commande->execCmd() != $Equipement['active'] && $Commande->execCmd() == ''){
+						if($Commande->execCmd() != $Equipement['active']){
 							$Commande->setCollectDate('');
 							$Commande->event($Equipement['active']);
 						}
@@ -349,10 +348,10 @@ class Freebox_OS extends eqLogic {
 			if($Ping['success'])
 				return $Ping['result'];
 			else
-				return 0;
+				return false;
 		}
 		else
-			return 0;
+			return false;
 	}
 	public function nb_appel_absence() {
 		if(self::open_session()){
@@ -368,7 +367,6 @@ class Freebox_OS extends eqLogic {
 					$cptAppel_outgoing = 0;
 					$cptAppel_missed = 0;
 					$cptAppel_accepted = 0;
-
 					for ($k=0; $k<$nb_call; $k++) 
 					{
 						$jour = $pre_check_con['result'][$k]['datetime'];
@@ -426,10 +424,8 @@ class Freebox_OS extends eqLogic {
 	public function airmediaStartVideo($media) {
 	if(self::open_session()){
         	log::add('FreeboxOS','debug','AirMedia Start Video: '.$media);
-
         	$return=self::fetch('/api/v3/airmedia/receivers/Freebox%20Player/',array("action" => "start","media_type" => "video","media" => $media,"password" => ""),"POST");   
          	self::close_session();
-
 		if($return['success'])
                 	return true;
                 else
@@ -444,7 +440,6 @@ class Freebox_OS extends eqLogic {
          
          $return=self::fetch('/api/v3/airmedia/receivers/Freebox%20Player/',array("action" => "stop","media_type" => "video"),"POST");   
          self::close_session();
-
          if($return['success'])
          {
             return true;
@@ -581,10 +576,9 @@ class Freebox_OS extends eqLogic {
 		);
 		if($this->getLogicalId()=='Reseau'||$this->getLogicalId()=='System')
 		{
-			$EquipementsHtml='';
 			if ($this->getIsEnable()) {
+				$EquipementsHtml='';
 				foreach ($this->getCmd(null, null, true) as $cmd) {
-					$replaceCmd['#stat#'] = $cmd->execCmd()!='' ?$cmd->execCmd():0;
 					$replaceCmd['#host_type#'] = $cmd->getConfiguration('host_type');
 					$replaceCmd['#IPV4#'] = $cmd->getConfiguration('IPV4');
 					$replaceCmd['#IPV6#'] = $cmd->getConfiguration('IPV6');
@@ -689,7 +683,6 @@ class Freebox_OS extends eqLogic {
 		$cmd .= ' >> ' . log::getPathToLog('Freebox_OS_update') . ' 2>&1 &';
 		exec($cmd);
 	}
-
 }
 class Freebox_OSCmd extends cmd {
 	public function execute($_options = array())	{
