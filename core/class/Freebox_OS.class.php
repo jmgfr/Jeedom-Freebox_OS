@@ -67,7 +67,7 @@ class Freebox_OS extends eqLogic {
 	            	$method=(!$params)?'GET':'POST';
 		$serveur=trim(config::byKey('FREEBOX_SERVER_IP','Freebox_OS'));
 		$session_token=config::byKey('FREEBOX_SERVER_SESSION_TOKEN','Freebox_OS');
-		log::add('FreeboxOS','debug','Connexion ' . $method .' sur la l\'adresse '. $serveur.$api_url .'('.json_encode($params).')');
+		log::add('Freebox_OS','debug','Connexion ' . $method .' sur la l\'adresse '. $serveur.$api_url .'('.json_encode($params).')');
 	        $ch = curl_init();
 	        curl_setopt($ch, CURLOPT_URL, $serveur.$api_url);
 	        curl_setopt($ch, CURLOPT_HEADER, false);
@@ -85,7 +85,7 @@ class Freebox_OS extends eqLogic {
 	        curl_setopt($ch, CURLOPT_HTTPHEADER, array("X-Fbx-App-Auth: $session_token"));
 	        $content = curl_exec($ch);
 	        curl_close($ch);
-			log::add('FreeboxOS','debug', $content);
+			log::add('Freebox_OS','debug', $content);
 			return json_decode($content, true);	
     	}
 	public function close_session(){
@@ -199,7 +199,7 @@ class Freebox_OS extends eqLogic {
 				$value=0;
 				if($data_json['result']['enabled'])
 					$value=1;
-				log::add('FreeboxOS','debug','L\'état du wifi est '.$value);
+				log::add('Freebox_OS','debug','L\'état du wifi est '.$value);
 				return $value;
 			}
 			else
@@ -210,7 +210,7 @@ class Freebox_OS extends eqLogic {
 	}
 	public function wifiPUT($parametre) {
 		if(self::open_session()){
-			log::add('FreeboxOS','debug','Mise dans l\'état '.$parametre.' du wifi');
+			log::add('Freebox_OS','debug','Mise dans l\'état '.$parametre.' du wifi');
 			if ($parametre==1)
 				$return=self::fetch('/api/v3/wifi/config/',array("enabled" => true),"PUT");	
 			else
@@ -276,7 +276,7 @@ class Freebox_OS extends eqLogic {
 	public function UpdateSystem() {		
 		$System=self::AddEqLogic('Système','System');
 		$Commande=self::AddCommande($System,'Update','update',"action",'other','Freebox_OS_System');
-		log::add('FreeboxOS','debug','Vérification d\'une mise a jours du serveur');
+		log::add('Freebox_OS','debug','Vérification d\'une mise a jours du serveur');
 		$firmwareOnline=file_get_contents("http://dev.freebox.fr/blog/?cat=5");
 		preg_match_all('|<h1><a href=".*">Mise à jour du Freebox Server (.*)</a></h1>|U', $firmwareOnline , $parseFreeDev, PREG_PATTERN_ORDER);			
 		if(intval($Commande->execCmd()) < intval($parseFreeDev[1][0]))
@@ -449,7 +449,7 @@ class Freebox_OS extends eqLogic {
 	}
 	public function AirMediaAction($receiver,$action,$media_type,$media=null) {
 		if(self::open_session()&&$receiver!=""&&$media_type!=null){
-	        	log::add('FreeboxOS','debug','AirMedia Start Video: '.$media);
+	        	log::add('Freebox_OS','debug','AirMedia Start Video: '.$media);
 	        	$parametre["action"]=$action;
 	        	$parametre["media_type"]=$media_type;
 	        	if($media!=null)
@@ -466,7 +466,7 @@ class Freebox_OS extends eqLogic {
 		       return false;
 	}
 	public function log($_type = 'INFO', $_message) {
-    	log::add('FreeboxOS', $_type, '['.$this->name.'-'.$this->getId().'] '.getmypid().' '.$_message, $this->name);
+    	log::add('Freebox_OS', $_type, '['.$this->name.'-'.$this->getId().'] '.getmypid().' '.$_message, $this->name);
     }
 	public static function AddEqLogic($Name,$_logicalId) {
 			$EqLogic = self::byLogicalId($_logicalId, 'Freebox_OS');
@@ -711,7 +711,7 @@ class Freebox_OS extends eqLogic {
 }
 class Freebox_OSCmd extends cmd {
 	public function execute($_options = array())	{
-		log::add('FreeboxOS','debug','Connexion sur la freebox pour '.$this->getName());
+		log::add('Freebox_OS','debug','Connexion sur la freebox pour '.$this->getName());
 		switch ($this->getEqLogic()->getLogicalId())
 		{
 			case 'ADSL':
@@ -919,7 +919,7 @@ class Freebox_OSCmd extends cmd {
 				switch($this->getLogicalId()){
 					case 'powerstat':
 						$return=exec('sudo nc -zv '.$this->getEqLogic()->getConfiguration('FREEBOX_TV_IP').' 7000 2>&1 | grep "open" | wc -l');
-						log::add('FreeboxOS','debug','Etat du player freebox '.$this->getEqLogic()->getConfiguration('FREEBOX_TV_IP').' '.$return);
+						log::add('Freebox_OS','debug','Etat du player freebox '.$this->getEqLogic()->getConfiguration('FREEBOX_TV_IP').' '.$return);
 					break;
 					case 'power':
 						$result=$this->getEqLogic()->send_cmd_fbxtv($this->getLogicalId());
