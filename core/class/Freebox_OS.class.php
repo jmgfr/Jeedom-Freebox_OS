@@ -724,10 +724,14 @@ class Freebox_OSCmd extends cmd {
                                                         $return= $result['nb_tasks_done'];
                                                         break;
 						case "rx_rate":
-                                                        $return= bcdiv($result['rx_rate'],1048576,2);
+                                                        $return= $result['rx_rate'];
+                                                        if(function_exists('bcdiv'))
+                                                		$return= bcdiv($return,1048576,2);
                                                         break;
 						case "tx_rate":
-							$return= bcdiv($result['tx_rate'],1048576,2);
+                                                        $return= $result['tx_rate'];
+                                                        if(function_exists('bcdiv'))
+                                                		$return= bcdiv($return,1048576,2);
 							break;
                                                 case "nb_tasks_active":
                                                         $return= $result['nb_tasks_active'];
