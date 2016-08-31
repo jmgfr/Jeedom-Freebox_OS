@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <info>
-    <id>Freebox_OS</id>
-    <name>FreeboxOS</name>
-    <description>Plugin pour commander la Freebox OS</description>
-    <icon>icon techno-freebox</icon>
-    <licence>AGPL</licence>
-    <author>Halbout Michael</author>
-    <installation>Aucune</installation>
-    <require>1.80</require>
-    <version>1.0</version>
-    <category>communication</category>
+	<id>Freebox_OS</id>
+	<name>FreeboxOS</name>
+	<description>Plugin pour commander la Freebox OS</description>
+	<icon>icon techno-freebox</icon>
+	<licence>AGPL</licence>
+	<author>Halbout Michael</author>
+	<installation>Aucune</installation>
+	<require>1.80</require>
+	<category>communication</category>
 	<hasDependency>1</hasDependency>
+	<hasOwnDeamon>1</hasOwnDeamon>
 </info>
 
