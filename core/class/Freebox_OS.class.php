@@ -2,6 +2,48 @@
 /* * ***************************Includes********************************* */
 require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 class Freebox_OS extends eqLogic {
+	public static function deamon_info() {
+		$return = array();
+		$return['log'] = 'Freebox_OS';	
+		if(config::byKey('FREEBOX_SERVER_SESSION_TOKEN','Freebox_OS')!='')
+			$return['state'] = 'ok';
+		else
+			$return['state'] = 'nok';
+		if(trim(config::byKey('FREEBOX_SERVER_IP','Freebox_OS'))!=''&&config::byKey('FREEBOX_SERVER_APP_TOKEN','Freebox_OS')!=''&&trim(config::byKey('FREEBOX_SERVER_APP_ID','Freebox_OS'))!='')
+			$return['launchable'] = 'ok';
+		else
+			$return['launchable'] = 'nok';
+		return $return;
+	}
+	public static function deamon_start($_debug = false) {
+		$deamon_info = self::deamon_info();
+		if ($deamon_info['launchable'] != 'ok') 
+			return;
+		log::remove('Freebox_OS');
+		self::deamon_stop();
+		$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshInformation');
+		if (!is_object($cron)) {
+			$cron = new cron();
+			$cron->setClass('Freebox_OS');
+			$cron->setFunction('RefreshInformation');
+			$cron->setEnable(1);
+			$cron->setDeamon(1);
+			$cron->setSchedule('* * * * *');
+			$cron->setTimeout('999999');
+			$cron->save();
+		}
+		$cron->start();
+		$cron->run();
+		self::open_session();
+	}
+	public static function deamon_stop() {
+		$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshInformation');
+		if (is_object($cron)) {
+			$cron->stop();
+			$cron->remove();
+		}
+		self::close_session();
+	}
 	public function track_id() 	{
 		$serveur		=trim(config::byKey('FREEBOX_SERVER_IP','Freebox_OS'));
 		$app_id 		=trim(config::byKey('FREEBOX_SERVER_APP_ID','Freebox_OS'));
@@ -93,55 +135,39 @@ class Freebox_OS extends eqLogic {
 		$http = new com_http($serveur . '/api/v3/login/logout/');
 		$http->setPost(array());
 		$json_close=$http->exec(2,2);
+		config::save('FREEBOX_SERVER_SESSION_TOKEN','','Freebox_OS');
 		return $json_close;
 	}
 	public function WakeOnLAN($Mac){
-		if(self::open_session()){
 			$return=self::fetch('/api/v3/lan/wol/pub/',array("mac"=> $Mac,"password"=> ""),"POST");	
-			self::close_session();
 			return $return['success'];
-		}
-		else
-			return false;
 	}
     	public function Downloads($Etat){
-                if(self::open_session()){
 			$List_DL=self::fetch('/api/v3/downloads/',null);
-			self::close_session();
 			$nbDL=count($List_DL['result']);
                         for($i = 0; $i < $nbDL; ++$i)
 			{
 				if ($Etat==0)
 	        	                $Downloads=self::fetch('/api/v3/downloads/'.$List_DL['result'][$i]['id'],array("status"=>"stopped"),"PUT");
-					self::close_session();
 				if ($Etat==1)
 					$Downloads=self::fetch('/api/v3/downloads/'.$List_DL['result'][$i]['id'],array("status"=>"downloading"),"PUT");
-					self::close_session();
                         }        
                                 if($Downloads['success'])
                                         return $Downloads['success'];
                                 else
-                                        return false;
-                }      
-		else
-                        return false;                                                                                                                                                                                          
+                                        return false;                                                                                                                                                                                     
 	}
 	public function DownloadStats(){
-                if(self::open_session()){
-                        $DownloadStats = self::fetch('/api/v3/downloads/stats/',null);
-          		self::close_session();
+		$DownloadStats = self::fetch('/api/v3/downloads/stats/',null);
+          		
 			if($DownloadStats['success'])
 				return $DownloadStats['result'];
 			else
 				return false;
-		}
-		else
-			return false;
 	}
 	public function PortForwarding($Port){
-		if(self::open_session()){
 			$PortForwarding = self::fetch('/api/v3/fw/redir/',null);
-			self::close_session();
+			
                         $nbPF=count($PortForwarding['result']);
                         for($i = 0; $i < $nbPF; ++$i)
 			{
@@ -150,20 +176,16 @@ class Freebox_OS extends eqLogic {
         	                		$PortForwarding=self::fetch('/api/v3/fw/redir/'.$PortForwarding['result'][$i]['id'],array("enabled"=>false),"PUT");
 					else
 						$PortForwarding=self::fetch('/api/v3/fw/redir/'.$PortForwarding['result'][$i]['id'],array("enabled"=>true),"PUT");
-                                        self::close_session();
+                                        
 			}
 			if($PortForwarding['success'])	
 				return $PortForwarding['result'];
 			else
 				return false;
-		}
-		else
-			return false;
 	}
 	public function disques($logicalId=''){
-		if(self::open_session()){
 			$reponse = self::fetch('/api/v3/storage/disk/',null);
-			self::close_session();
+			
 			if($reponse['success']){
 				$nbDD=count($reponse['result']);
 				$countDD=0;
@@ -187,14 +209,10 @@ class Freebox_OS extends eqLogic {
 			}
 			else
 				return false;
-		}
-		else
-			return false;
 	}
 	public function wifi(){
-		if(self::open_session()){
 			$data_json = self::fetch('/api/v3/wifi/config/',null);
-			self::close_session();
+			
 			if($data_json['success']){
 				$value=0;
 				if($data_json['result']['enabled'])
@@ -204,74 +222,51 @@ class Freebox_OS extends eqLogic {
 			}
 			else
 				return false;
-		}
-		else
-			return false;
 	}
 	public function wifiPUT($parametre) {
-		if(self::open_session()){
 			log::add('Freebox_OS','debug','Mise dans l\'état '.$parametre.' du wifi');
 			if ($parametre==1)
 				$return=self::fetch('/api/v3/wifi/config/',array("enabled" => true),"PUT");	
 			else
 				$return=self::fetch('/api/v2/wifi/config/',array("enabled" => false),"PUT");	
-			self::close_session();
+			
 			if($return['success'])
 			{
 				return $return['result']['enabled'];
 			}
-			return false;
-		}
 	}
 	public function reboot() {
-		if(self::open_session()){
 			$content=self::fetch('/api/v3/system/reboot/',null,"POST");	
-			self::close_session();
+			
 			if($content['success'])
 				return $content;
 			else
 				return false;
-		}
-		else
-			return false;
 	}
 	public function ringtone_on() {
-		if(self::open_session()){
 			$content=self::fetch('/api/v3/phone/dect_page_start/',"","POST");	
-			self::close_session();
+			
 			if($content['success'])
 				return $content;
 			else
 				return false;
-		}
-		else
-			return false;
 	}
 	public function ringtone_off() {
-		if(self::open_session()){
 			$content=self::fetch('/api/v3/phone/dect_page_stop/',"","POST");	
-			self::close_session();
+			
 			if($content['success'])
 				return $content;
 			else
 				return false;
-		}
-		else
-			return false;
 	}
 	public function system() {		
-		if(self::open_session()){
 			$systemArray = self::fetch('/api/v3/system/',null);
-			self::close_session();
+			
 			if($systemArray['success']){	
 				return $systemArray['result'];
 			}
 			else
 				return false;
-		}
-		else
-			return false;
-	
 	}	
 	public function UpdateSystem() {		
 		$System=self::AddEqLogic('Système','System');
@@ -282,8 +277,7 @@ class Freebox_OS extends eqLogic {
 		if(intval($Commande->execCmd()) < intval($parseFreeDev[1][0]))
 			self::reboot();
 	}
-	public function adslStats(){
-		if(self::open_session()){		
+	public function adslStats(){	
 			$adslRateJson = self::fetch('/api/v3/connection/',null);
 			if($adslRateJson['success']){		
 				$vdslRateJson = self::fetch('/api/v3/connection/xdsl/',null);				
@@ -300,16 +294,10 @@ class Freebox_OS extends eqLogic {
 			}
 			else
 				return false;
-		
-		self::close_session();
-		}
-		else
-			return false;
 	}
 	public function freeboxPlayerPing(){
-		if(self::open_session()){
 			$listEquipement = self::fetch('/api/v3/lan/browser/pub/',null);
-			self::close_session();
+			
 			if($listEquipement['success']){
 				$Reseau=Freebox_OS::AddEqLogic('Réseau','Reseau');
 				foreach($listEquipement['result'] as $Equipement)
@@ -338,23 +326,16 @@ class Freebox_OS extends eqLogic {
 				}
 			}
 			return true;
-		}
-		return false;
 	}
 	public function ReseauPing($id=''){
-		if(self::open_session()){
 			$Ping = self::fetch('/api/v3/lan/browser/pub/'.$id,null);
-			self::close_session();
+			
 			if($Ping['success'])
 				return $Ping['result'];
 			else
 				return false;
-		}
-		else
-			return false;
 	}
 	public function nb_appel_absence() {
-		if(self::open_session()){
 			$listNumber_missed='';
 			$listNumber_accepted='';
 			$listNumber_outgoing='';
@@ -404,14 +385,11 @@ class Freebox_OS extends eqLogic {
 				}
 				else	
 					$retourFbx = array('missed' => 0, 'list_missed' => "", 'accepted' => 0, 'list_accepted' => "", 'outgoing' => 0,'list_outgoing' => "" );
-				self::close_session();
+				
 				return $retourFbx;
 			}
 			else
 				return false;
-		}
-		else
-			return false;
 	}
 	public function send_cmd_fbxtv($key){
 		$serveur		=trim($this->getConfiguration('FREEBOX_TV_IP'));
@@ -422,33 +400,25 @@ class Freebox_OS extends eqLogic {
 		return $result;
 	}
 	public function airmediaConfig() {
-		if(self::open_session()){
 			$parametre["enabled"]=$this->getIsEnable();
 			$parametre["password"]=$this->getConfiguration('password');
 	        	$return=self::fetch('/api/v3/airmedia/config/',$parametre,"PUT");   
-	         	self::close_session();
+	         	
 			if($return['success'])
 	                	return $return['result'];
 	                else
 	                        return false;
-		}
-		else
-		       return false;
 	}
 	public static function airmediaReceivers() {
-		if(self::open_session()){
 	        	$return=self::fetch('/api/v3/airmedia/receivers/',null);   
-	         	self::close_session();
+	         	
 			if($return['success'])
 	                	return $return['result'];
 	                else
 	                        return false;
-		}
-		else
-		       return false;
 	}
 	public function AirMediaAction($receiver,$action,$media_type,$media=null) {
-		if(self::open_session()&&$receiver!=""&&$media_type!=null){
+		if($receiver!=""&&$media_type!=null){
 	        	log::add('Freebox_OS','debug','AirMedia Start Video: '.$media);
 	        	$parametre["action"]=$action;
 	        	$parametre["media_type"]=$media_type;
@@ -456,7 +426,6 @@ class Freebox_OS extends eqLogic {
 	        		$parametre["media"]=$media;
 	        	$parametre["password"]=$this->getConfiguration('password');
 	        	$return=self::fetch('/api/v3/airmedia/receivers/'.($receiver).'/',$parametre,'POST');
-	         	self::close_session();
 			if($return['success'])
 	                	return true;
 	                else
