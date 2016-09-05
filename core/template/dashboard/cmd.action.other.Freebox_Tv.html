@@ -4,7 +4,7 @@
 		if ("#state#" == "1") {
 			$(".iconCmd#id#").css('background-color', '#C42833');
 		} else {
-			$(".iconCmd#id#").parent().parent().css('background-color', 'transparent');
+			$(".iconCmd#id#").css('background-color', 'transparent');
 		}
 	$(".cmd[data-cmd_id=#id#] .action").off();
 	$(".cmd[data-cmd_id=#id#] .action").on("click", function() {
