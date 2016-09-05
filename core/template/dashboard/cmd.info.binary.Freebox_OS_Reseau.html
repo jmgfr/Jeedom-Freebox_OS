@@ -50,14 +50,17 @@
 .lan-workstation-0{background-position:0 -1140px}
 .lan-workstation-1{background-position:0 -180px}
 </style>
-	<div class="lan-host-img lan-#host_type#-#state#" aria-label="#name#"></div>
+	<div class="lan-host-img"  aria-label="#name#"></div>
     <div class="lan-host-name">#name#</div>
     <div class="lan-host-vendor">#IPV4#</div>
     <!--div class="lan-host-vendor">#IPV6#</div-->
 </div>
 
 <script>
-
+	if(#state# && '#state#'!='')
+		$(".cmd[data-cmd_id=#id#] .lan-host-img").addClass('lan-#host_type#-1');
+	else
+		$(".cmd[data-cmd_id=#id#] .lan-host-img").addClass('lan-#host_type#-0');
 	$(".cmd[data-cmd_id=#id#]").on("click", function() {
 		$('#md_modal').dialog({
 			title: "Parametre de l'équipement Reseau",
