@@ -654,14 +654,16 @@ class Freebox_OS extends eqLogic {
 			$this->setLogicalId('FreeboxTv');
 	}
 	public static function cronHourly() {
-      	self::disques();
+      		self::disques();
 		self::freeboxPlayerPing();
 	}	
 	public static function RefreshInformation() {
-		foreach(eqLogic::byType('Freebox_OS') as $Equipement){
-			if($Equipement->getIsEnable()){
-				foreach($Equipement->getCmd('info') as $Commande){
-					$Commande->execute();
+		while(true){
+			foreach(eqLogic::byType('Freebox_OS') as $Equipement){
+				if($Equipement->getIsEnable()){
+					foreach($Equipement->getCmd('info') as $Commande){
+						$Commande->execute();
+					}
 				}
 			}
 		}
