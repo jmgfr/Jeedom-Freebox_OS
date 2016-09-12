@@ -23,12 +23,14 @@ class Freebox_OS extends eqLogic {
 		return $return;
 	}
 	public static function deamon_start($_debug = false) {
-		$deamon_info = self::deamon_info();
-		if ($deamon_info['launchable'] != 'ok') 
-			return;
 		log::remove('Freebox_OS');
 		self::deamon_stop();
 		self::open_session();
+		$deamon_info = self::deamon_info();
+		if ($deamon_info['launchable'] != 'ok') 
+			return;
+		if ($deamon_info['state'] != 'ok') 
+			return;
 		$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshInformation');
 		if (!is_object($cron)) {
 			$cron = new cron();
