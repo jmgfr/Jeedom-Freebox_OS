@@ -12,7 +12,7 @@ class Freebox_OS extends eqLogic {
 		$cache = cache::byKey('Freebox_OS::SessionToken');
 		//if(config::byKey('FREEBOX_SERVER_SESSION_TOKEN','Freebox_OS')!='')
 		if(is_object($cache)&&$cache->getValue('')!=''){
-			$reponse = self::fetch('/api/v3/login/session/');
+			$reponse = self::fetch('/api/v3/login/');
 			if($reponse['success'])
 				$return['state'] = 'ok';
 			else
@@ -136,8 +136,8 @@ class Freebox_OS extends eqLogic {
 	        curl_setopt($ch, CURLOPT_HTTPHEADER, array("X-Fbx-App-Auth: $session_token"));
 	        $content = curl_exec($ch);
 	        curl_close($ch);
-			log::add('Freebox_OS','debug', $content);
-			return json_decode($content, true);	
+		log::add('Freebox_OS','debug', $content);
+		return json_decode($content, true);	
     	}
 	public function close_session(){
 		$serveur=trim(config::byKey('FREEBOX_SERVER_IP','Freebox_OS'));
