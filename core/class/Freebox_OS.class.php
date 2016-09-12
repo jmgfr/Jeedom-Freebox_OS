@@ -4,18 +4,22 @@ require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 class Freebox_OS extends eqLogic {
 	public static function deamon_info() {
 		$return = array();
-		$return['log'] = 'Freebox_OS';	
-		$cache = cache::byKey('Freebox_OS::SessionToken');
-		//if(config::byKey('FREEBOX_SERVER_SESSION_TOKEN','Freebox_OS')!='')
-		$reponse = self::fetch('/api/v3/login/session/',null);
-		if($reponse['success']&&is_object($cache)&&$cache->getValue('')!='')
-			$return['state'] = 'ok';
-		else
-			$return['state'] = 'nok';
+		$return['log'] = 'Freebox_OS';		
 		if(trim(config::byKey('FREEBOX_SERVER_IP','Freebox_OS'))!=''&&config::byKey('FREEBOX_SERVER_APP_TOKEN','Freebox_OS')!=''&&trim(config::byKey('FREEBOX_SERVER_APP_ID','Freebox_OS'))!='')
 			$return['launchable'] = 'ok';
 		else
 			$return['launchable'] = 'nok';
+		$cache = cache::byKey('Freebox_OS::SessionToken');
+		//if(config::byKey('FREEBOX_SERVER_SESSION_TOKEN','Freebox_OS')!='')
+		if(is_object($cache)&&$cache->getValue('')!=''){
+			$reponse = self::fetch('/api/v3/login/session/');
+			if($reponse['success'])
+				$return['state'] = 'ok';
+			else
+				$return['state'] = 'nok';
+		}else {
+			$return['state'] = 'nok';
+		}
 		return $return;
 	}
 	public static function deamon_start($_debug = false) {
@@ -109,9 +113,7 @@ class Freebox_OS extends eqLogic {
 			return false;
 		return true;
 	}
-	public function fetch($api_url,$params=array(), $method=null) {
-	        if (!$method) 
-	            	$method=(!$params)?'GET':'POST';
+	public function fetch($api_url,$params=array(), $method='GET') {
 		$serveur=trim(config::byKey('FREEBOX_SERVER_IP','Freebox_OS'));
 		$cache = cache::byKey('Freebox_OS::SessionToken');
 		$session_token = $cache->getValue('');
@@ -152,7 +154,7 @@ class Freebox_OS extends eqLogic {
 			return $return['success'];
 	}
     	public function Downloads($Etat){
-			$List_DL=self::fetch('/api/v3/downloads/',null);
+			$List_DL=self::fetch('/api/v3/downloads/');
 			$nbDL=count($List_DL['result']);
                         for($i = 0; $i < $nbDL; ++$i)
 			{
@@ -167,7 +169,7 @@ class Freebox_OS extends eqLogic {
                                         return false;                                                                                                                                                                                     
 	}
 	public function DownloadStats(){
-		$DownloadStats = self::fetch('/api/v3/downloads/stats/',null);
+		$DownloadStats = self::fetch('/api/v3/downloads/stats/');
           		
 			if($DownloadStats['success'])
 				return $DownloadStats['result'];
@@ -175,7 +177,7 @@ class Freebox_OS extends eqLogic {
 				return false;
 	}
 	public function PortForwarding($Port){
-			$PortForwarding = self::fetch('/api/v3/fw/redir/',null);
+			$PortForwarding = self::fetch('/api/v3/fw/redir/');
 			
                         $nbPF=count($PortForwarding['result']);
                         for($i = 0; $i < $nbPF; ++$i)
@@ -193,7 +195,7 @@ class Freebox_OS extends eqLogic {
 				return false;
 	}
 	public function disques($logicalId=''){
-			$reponse = self::fetch('/api/v3/storage/disk/',null);
+			$reponse = self::fetch('/api/v3/storage/disk/');
 			
 			if($reponse['success']){
 				$nbDD=count($reponse['result']);
@@ -220,7 +222,7 @@ class Freebox_OS extends eqLogic {
 				return false;
 	}
 	public function wifi(){
-			$data_json = self::fetch('/api/v3/wifi/config/',null);
+			$data_json = self::fetch('/api/v3/wifi/config/');
 			
 			if($data_json['success']){
 				$value=0;
@@ -269,7 +271,7 @@ class Freebox_OS extends eqLogic {
 				return false;
 	}
 	public function system() {		
-			$systemArray = self::fetch('/api/v3/system/',null);
+			$systemArray = self::fetch('/api/v3/system/');
 			
 			if($systemArray['success']){	
 				return $systemArray['result'];
@@ -287,9 +289,9 @@ class Freebox_OS extends eqLogic {
 			self::reboot();
 	}
 	public function adslStats(){	
-			$adslRateJson = self::fetch('/api/v3/connection/',null);
+			$adslRateJson = self::fetch('/api/v3/connection/');
 			if($adslRateJson['success']){		
-				$vdslRateJson = self::fetch('/api/v3/connection/xdsl/',null);				
+				$vdslRateJson = self::fetch('/api/v3/connection/xdsl/');				
 				if($vdslRateJson['result']['status']['modulation'] == "vdsl")
 					$adslRateJson['result']['media'] = $vdslRateJson['result']['status']['modulation'];
 				
@@ -305,7 +307,7 @@ class Freebox_OS extends eqLogic {
 				return false;
 	}
 	public function freeboxPlayerPing(){
-			$listEquipement = self::fetch('/api/v3/lan/browser/pub/',null);
+			$listEquipement = self::fetch('/api/v3/lan/browser/pub/');
 			
 			if($listEquipement['success']){
 				$Reseau=Freebox_OS::AddEqLogic('Réseau','Reseau');
@@ -337,7 +339,7 @@ class Freebox_OS extends eqLogic {
 			return true;
 	}
 	public function ReseauPing($id=''){
-			$Ping = self::fetch('/api/v3/lan/browser/pub/'.$id,null);
+			$Ping = self::fetch('/api/v3/lan/browser/pub/'.$id);
 			
 			if($Ping['success'])
 				return $Ping['result'];
@@ -348,7 +350,7 @@ class Freebox_OS extends eqLogic {
 			$listNumber_missed='';
 			$listNumber_accepted='';
 			$listNumber_outgoing='';
-			$pre_check_con = self::fetch('/api/v3/call/log/',null);
+			$pre_check_con = self::fetch('/api/v3/call/log/');
 			if($pre_check_con['success']){			
 				$timestampToday = mktime(0, 0, 0, date('n'), date('j'), date('Y'));
 				if(isset($pre_check_con['result'])){
@@ -419,7 +421,7 @@ class Freebox_OS extends eqLogic {
 	                        return false;
 	}
 	public static function airmediaReceivers() {
-	        	$return=self::fetch('/api/v3/airmedia/receivers/',null);   
+	        	$return=self::fetch('/api/v3/airmedia/receivers/');   
 	         	
 			if($return['success'])
 	                	return $return['result'];
