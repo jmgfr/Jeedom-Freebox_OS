@@ -12,7 +12,7 @@ class Freebox_OS extends eqLogic {
 		$cache = cache::byKey('Freebox_OS::SessionToken');
 		//if(config::byKey('FREEBOX_SERVER_SESSION_TOKEN','Freebox_OS')!='')
 		if(is_object($cache)&&$cache->getValue('')!=''){
-			$reponse = self::fetch('/api/v3/login/');
+			$reponse = self::fetch('/api/v3/system/');
 			if($reponse['success'])
 				$return['state'] = 'ok';
 			else
