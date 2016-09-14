@@ -671,7 +671,7 @@ class Freebox_OS extends eqLogic {
 					}
 				}
 			}
-			sleep(config::byKey('DemonSleep,'Freebox_OS'));
+			sleep(config::byKey('DemonSleep','Freebox_OS'));
 		}
 	}
 	public static function dependancy_info() {
