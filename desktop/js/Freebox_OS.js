@@ -1,12 +1,12 @@
 $("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
-$('.EquipementReseau').on('click', function() {
+$('.Equipement').on('click', function() {
 	$.ajax({
 		type: 'POST',            
 		async: false,
 		url: 'plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php',
 		data:
 			{
-			action: 'SearchReseau'
+			action: 'Search'+$('.eqLogicAttr[data-l1key=logicalId]).val()
 			},
 		dataType: 'json',
 		global: false,
@@ -18,15 +18,19 @@ $('.EquipementReseau').on('click', function() {
 function addCmdToTable(_cmd) {
 	switch($('.eqLogicAttr[data-l1key=logicalId]').val()){
 		case 'Reseau':
-			$('.EquipementReseau').show();
+			$('.Equipement').show();
 			$('.TvParameter').hide();
 		break;
 		case 'FreeboxTv':
-			$('.EquipementReseau').hide();
+			$('.Equipement').show();
+			$('.TvParameter').hide();
+		break;
+		case 'FreeboxTv':
+			$('.Equipement').hide();
 			$('.TvParameter').show();
 		break;
 		default:
-			$('.EquipementReseau').hide();
+			$('.Equipement').hide();
 			$('.TvParameter').hide();
 		break;
 	}
