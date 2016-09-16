@@ -17,11 +17,11 @@ $('.Equipement').on('click', function() {
 });
 function addCmdToTable(_cmd) {
 	switch($('.eqLogicAttr[data-l1key=logicalId]').val()){
-		case 'Reseau':
+		case 'Réseau':
 			$('.Equipement').show();
 			$('.TvParameter').hide();
 		break;
-		case 'FreeboxTv':
+		case 'Disque':
 			$('.Equipement').show();
 			$('.TvParameter').hide();
 		break;
