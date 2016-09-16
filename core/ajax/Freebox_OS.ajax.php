@@ -17,7 +17,7 @@ try {
 	if (init('action') == 'ask_track_authorization') 	{
 		ajax::success(Freebox_OS::ask_track_authorization());
 	}
-	if (init('action') == 'SearchRéseau') 	{
+	if (init('action') == 'SearchReseau') 	{
 		ajax::success(Freebox_OS::freeboxPlayerPing());
 	}
 	if (init('action') == 'SearchDisque') 	{
