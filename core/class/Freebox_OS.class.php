@@ -10,8 +10,9 @@ class Freebox_OS extends eqLogic {
 		else
 			$return['launchable'] = 'nok';
 		$cache = cache::byKey('Freebox_OS::SessionToken');
+		$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshInformation');
 		//if(config::byKey('FREEBOX_SERVER_SESSION_TOKEN','Freebox_OS')!='')
-		if(is_object($cache)&&$cache->getValue('')!=''){
+		if(is_object($cron)&&$cron->getState()=="run"&&is_object($cache)&&$cache->getValue('')!=''){
 			$reponse = self::fetch('/api/v3/system/');
 			if($reponse['success'])
 				$return['state'] = 'ok';
