@@ -657,10 +657,6 @@ class Freebox_OS extends eqLogic {
 		if($this->getLogicalId()=='')
 			$this->setLogicalId('FreeboxTv');
 	}
-	public static function cronHourly() {
-      		self::disques();
-		self::freeboxPlayerPing();
-	}	
 	public static function RefreshInformation() {
 		while(true){
 			foreach(eqLogic::byType('Freebox_OS') as $Equipement){
