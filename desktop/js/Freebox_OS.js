@@ -6,7 +6,7 @@ $('.Equipement').on('click', function() {
 		url: 'plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php',
 		data:
 			{
-			action: 'Search'+$('.eqLogicAttr[data-l1key=logicalId]).val()
+			action: 'Search'+$('.eqLogicAttr[data-l1key=logicalId]').val()
 			},
 		dataType: 'json',
 		global: false,
