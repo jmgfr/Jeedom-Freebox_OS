@@ -17,7 +17,7 @@ $('.Equipement').on('click', function() {
 });
 function addCmdToTable(_cmd) {
 	switch($('.eqLogicAttr[data-l1key=logicalId]').val()){
-		case 'Réseau':
+		case 'Reseau':
 			$('.Equipement').show();
 			$('.TvParameter').hide();
 		break;
