@@ -94,7 +94,7 @@ $eqLogics = eqLogic::byType('Freebox_OS');
 						<input type="checkbox" class="eqLogicAttr bootstrapSwitch" data-label-text="{{Visible}}" data-l1key="isVisible" checked/>
 					</div>
 				</div>
-				<div class="form-group EquipementReseau">
+				<div class="form-group Equipement">
 					<label class="col-sm-2 control-label" >{{Recherche des équipement}}</label>
 					<div class="col-sm-9">
 						<a class="btn btn-primary eqLogicAction"><i class="fa fa-search"></i> {{Recherche}}</a>
