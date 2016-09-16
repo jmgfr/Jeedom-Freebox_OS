@@ -17,8 +17,11 @@ try {
 	if (init('action') == 'ask_track_authorization') 	{
 		ajax::success(Freebox_OS::ask_track_authorization());
 	}
-	if (init('action') == 'SearchReseau') 	{
+	if (init('action') == 'SearchRéseau') 	{
 		ajax::success(Freebox_OS::freeboxPlayerPing());
+	}
+	if (init('action') == 'SearchDisque') 	{
+		ajax::success(Freebox_OS::disques());
 	}
 	if (init('action') == 'AddPortForwarding')	{
 		$PortForwarding=array(
