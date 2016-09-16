@@ -12,15 +12,10 @@ class Freebox_OS extends eqLogic {
 		$cache = cache::byKey('Freebox_OS::SessionToken');
 		$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshInformation');
 		//if(config::byKey('FREEBOX_SERVER_SESSION_TOKEN','Freebox_OS')!='')
-		if(is_object($cron)&&$cron->getState()=="run"&&is_object($cache)&&$cache->getValue('')!=''){
-			$reponse = self::fetch('/api/v3/system/');
-			if($reponse['success'])
-				$return['state'] = 'ok';
-			else
-				$return['state'] = 'nok';
-		}else {
+		if(is_object($cron) && $cron->getState()=="run" && is_object($cache) && $cache->getValue('')!='')
+			$return['state'] = 'ok';
+		else 
 			$return['state'] = 'nok';
-		}
 		return $return;
 	}
 	public static function deamon_start($_debug = false) {
@@ -30,7 +25,7 @@ class Freebox_OS extends eqLogic {
 		$deamon_info = self::deamon_info();
 		if ($deamon_info['launchable'] != 'ok') 
 			return;
-		if ($deamon_info['state'] != 'ok') 
+		if ($deamon_info['state'] == 'ok') 
 			return;
 		$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshInformation');
 		if (!is_object($cron)) {
@@ -139,8 +134,11 @@ class Freebox_OS extends eqLogic {
 	        curl_setopt($ch, CURLOPT_HTTPHEADER, array("X-Fbx-App-Auth: $session_token"));
 	        $content = curl_exec($ch);
 	        curl_close($ch);
+	        $result=json_decode($content, true);
+		if(!$result['success'])
+			self::deamon_stop();
 		log::add('Freebox_OS','debug', $content);
-		return json_decode($content, true);	
+		return $result;	
     	}
 	public function close_session(){
 		$serveur=trim(config::byKey('FREEBOX_SERVER_IP','Freebox_OS'));
