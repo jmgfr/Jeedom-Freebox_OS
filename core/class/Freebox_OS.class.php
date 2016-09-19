@@ -489,6 +489,8 @@ class Freebox_OS extends eqLogic {
 		return $Commande;
 	}
 	public static function CreateArchi() {
+		Freebox_OS::AddEqLogic('Réseau','Reseau');
+		self::AddEqLogic('Disque Dur','Disque');
 		// ADSL
 		$ADSL=self::AddEqLogic('ADSL','ADSL');
 		self::AddCommande($ADSL,'Freebox rate down','rate_down',"info",'numeric','Freebox_OS_Adsl');
@@ -524,7 +526,6 @@ class Freebox_OS extends eqLogic {
 		$cmdPF=self::AddCommande($System,'Redirection de ports','port_forwarding',"action",'message','Freebox_OS_System');
 	        $cmdPF->setIsVisible(0);
                 $cmdPF->save(); 
-		$Disque=self::AddEqLogic('Disque Dur','Disque');
 		$Phone=self::AddEqLogic('Téléphone','Phone');
 		self::AddCommande($Phone,'Nombre Appels Manqués','nbAppelsManquee',"info",'numeric','Freebox_OS_Phone');
 		self::AddCommande($Phone,'Nombre Appels Reçus','nbAppelRecus',"info",'numeric','Freebox_OS_Phone');
