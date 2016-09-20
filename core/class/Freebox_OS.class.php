@@ -21,7 +21,7 @@ class Freebox_OS extends eqLogic {
 	public static function deamon_start($_debug = false) {
 		log::remove('Freebox_OS');
 		self::deamon_stop();
-		self::open_session();
+		//self::open_session();
 		$deamon_info = self::deamon_info();
 		if ($deamon_info['launchable'] != 'ok') 
 			return;
@@ -135,6 +135,18 @@ class Freebox_OS extends eqLogic {
 	        $content = curl_exec($ch);
 	        curl_close($ch);
 	        $result=json_decode($content, true);
+	        switch($result['error_code']){
+	        	case 'inval':
+	        	case 'nodev':
+	        	case 'noent':
+	        	case 'netdown':
+	        	case 'busy':
+	        	case 'invalid_port':
+	        	case 'insecure_password':
+	        	case 'invalid_provider':
+	        	case 'invalid_next_hop':
+	        	break;
+	        }
 		if(!$result['success'])
 			self::deamon_stop();
 		log::add('Freebox_OS','debug', $content);
