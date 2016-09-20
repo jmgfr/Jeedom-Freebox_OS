@@ -135,7 +135,8 @@ class Freebox_OS extends eqLogic {
 	        $content = curl_exec($ch);
 	        curl_close($ch);
 	        $result=json_decode($content, true);
-	        switch($result['error_code']){
+		log::add('Freebox_OS','debug', $content);
+	        /*switch($result['error_code']){
 	        	case 'inval':
 	        	case 'nodev':
 	        	case 'noent':
@@ -148,8 +149,7 @@ class Freebox_OS extends eqLogic {
 	        	break;
 	        }
 		if(!$result['success'])
-			self::deamon_stop();
-		log::add('Freebox_OS','debug', $content);
+			self::deamon_stop();*/
 		return $result;	
     	}
 	public function close_session(){
